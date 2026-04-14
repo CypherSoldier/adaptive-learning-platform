@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "track_type": "Python",
+    "name": "py",
+    "description": "Python is a programming language that lets you work quickly and integrate systems more effectively.",
+    "difficulty_base": "beginner"
+  },
+  {
+    "id": 2,
+    "track_type": "C++",
+    "name": "cpp",
+    "description": "C++ is used to create computer programs, and is one of the most used language in game development.",
+    "difficulty_base": "beginner"
+  },
+  {
+    "id": 3,
+    "track_type": "JavaScript",
+    "name": "js",
+    "description": "JavaScript (JS) is a lightweight interpreted (or just-in-time compiled) programming language with first-class functions.",
+    "difficulty_base": "beginner"
+  }
+]

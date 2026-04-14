@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "question": "Which keyword is used to define a function in Python?",
+    "options": [
+      "function",
+      "def",
+      "func",
+      "lambda"
+    ],
+    "correct_answer": 1,
+    "explanation": "In Python, functions are defined using the 'def' keyword followed by the function name and parentheses.",
+    "difficulty": 1,
+    "topic": "Python"
+  },
+  {
+    "id": 2,
+    "question": "Which of the following is a valid Python variable name?",
+    "options": [
+      "2value",
+      "value-1",
+      "value_1",
+      "value 1"
+    ],
+    "correct_answer": 2,
+    "explanation": "Python variable names can contain letters, numbers, and underscores, but cannot start with a number or contain spaces or hyphens.",
+    "difficulty": 1,
+    "topic": "Python"
+  },
+  {
+    "id": 3,
+    "question": "What is the correct file extension for Python files?",
+    "options": [
+      ".py",
+      ".python",
+      ".pt",
+      ".pyt"
+    ],
+    "correct_answer": 0,
+    "explanation": "Python source files use the .py extension.",
+    "difficulty": 1,
+    "topic": "Python"
+  },
+  {
+    "id": 4,
+    "question": "What is the output of the following Python code?\n\n```python\nprint(3 * \"Hi\")\n```",
+    "options": [
+      "HiHiHi",
+      "Hi Hi Hi",
+      "Error",
+      "3Hi"
+    ],
+    "correct_answer": 0,
+    "explanation": "Multiplying a string by an integer repeats the string that many times.",
+    "difficulty": 2,
+    "topic": "Python"
+  },
+  {
+    "id": 5,
+    "question": "What is the output of the following Python code?\n\n```python\nx = 5\nx += 3\nprint(x)\n```",
+    "options": [
+      "5",
+      "8",
+      "3",
+      "Error"
+    ],
+    "correct_answer": 1,
+    "explanation": "The += operator adds the value on the right to the variable. So 5 + 3 = 8.",
+    "difficulty": 2,
+    "topic": "Python"
+  },
+  {
+    "id": 6,
+    "question": "What is the output of the following Python code?\n\n```python\nnums = [1, 2, 3]\nnums.append(4)\nprint(len(nums))\n```",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "Error"
+    ],
+    "correct_answer": 1,
+    "explanation": "The append() method adds a new element to the end of the list, increasing its length from 3 to 4.",
+    "difficulty": 2,
+    "topic": "Python"
+  },
+  {
+    "id": 7,
+    "question": "What is the output of the following Python code?\n\n```python\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)\n```",
+    "options": [
+      "[1, 2, 3]",
+      "[1, 2, 3, 4]",
+      "[4]",
+      "Error"
+    ],
+    "correct_answer": 1,
+    "explanation": "Both x and y reference the same list object. Modifying y also modifies x.",
+    "difficulty": 3,
+    "topic": "Python"
+  },
+  {
+    "id": 8,
+    "question": "What is the output of the following Python code?\n\n```python\nprint({i: i*i for i in range(3)})\n```",
+    "options": [
+      "{0:0, 1:1, 2:4}",
+      "[0, 1, 4]",
+      "{1:1, 2:4, 3:9}",
+      "Error"
+    ],
+    "correct_answer": 0,
+    "explanation": "This is a dictionary comprehension that maps each number to its square for values 0 through 2.",
+    "difficulty": 3,
+    "topic": "Python"
+  },
+  {
+    "id": 9,
+    "question": "What is the output of the following Python code?\n\n```python\ndef func(a, b=2, c=3):\n    return a + b + c\n\nprint(func(1, c=4))\n```",
+    "options": [
+      "6",
+      "7",
+      "8",
+      "Error"
+    ],
+    "correct_answer": 1,
+    "explanation": "a=1, b takes default value 2, and c is overridden to 4. So 1 + 2 + 4 = 7.",
+    "difficulty": 3,
+    "topic": "Python"
+  },
+  {
+    "id": 10,
+    "question": "What is the output of the following Python code?\n\n```python\nimport asyncio\n\nasync def main():\n    print(\"A\")\n    await asyncio.sleep(0)\n    print(\"B\")\n\nasyncio.run(main())\n```",
+    "options": [
+      "B A",
+      "A B",
+      "Only A",
+      "Error"
+    ],
+    "correct_answer": 1,
+    "explanation": "The coroutine prints 'A', then yields control with await, and then resumes to print 'B'.",
+    "difficulty": 4,
+    "topic": "Python"
+  },
+  {
+    "id": 11,
+    "question": "What is the main purpose of the Python Global Interpreter Lock (GIL)?",
+    "options": [
+      "To allow multiple threads to execute Python bytecode simultaneously",
+      "To ensure only one thread executes Python bytecode at a time",
+      "To prevent memory leaks",
+      "To manage async coroutines"
+    ],
+    "correct_answer": 1,
+    "explanation": "The GIL ensures that only one thread executes Python bytecode at a time, simplifying memory management in CPython.",
+    "difficulty": 4,
+    "topic": "Python"
+  },
+  {
+    "id": 12,
+    "question": "What is the output of the following Python code?\n\n```python\nimport threading\n\ncounter = 0\n\ndef increment():\n    global counter\n    for _ in range(1000):\n        counter += 1\n\nt1 = threading.Thread(target=increment)\nt2 = threading.Thread(target=increment)\n\nt1.start()\nt2.start()\n\nt1.join()\nt2.join()\n\nprint(counter)\n```",
+    "options": [
+      "Exactly 2000",
+      "Always 1000",
+      "Possibly less than 2000",
+      "Error"
+    ],
+    "correct_answer": 2,
+    "explanation": "Due to race conditions, the counter increment is not atomic and may result in a value less than 2000.",
+    "difficulty": 4,
+    "topic": "Python"
+  },
+  {
+    "id": 13,
+    "question": "What is the output of the following Python code?\n\n```python\nclass A:\n    def __init__(self):\n        self.value = 5\n\nclass B(A):\n    def __init__(self):\n        super().__init__()\n        self.value += 5\n\nb = B()\nprint(b.value)\n```",
+    "options": [
+      "5",
+      "10",
+      "Error",
+      "None"
+    ],
+    "correct_answer": 1,
+    "explanation": "Class B calls the parent constructor using super(), which sets value to 5, then adds 5 more, resulting in 10.",
+    "difficulty": 5,
+    "topic": "Python"
+  },
+  {
+    "id": 14,
+    "question": "What is the output of the following Python code?\n\n```python\ndef func(lst=[]):\n    lst.append(1)\n    return lst\n\nprint(func())\nprint(func())\n```",
+    "options": [
+      "[1] then [1]",
+      "[1] then [1, 1]",
+      "[1, 1] then [1]",
+      "Error"
+    ],
+    "correct_answer": 1,
+    "explanation": "Default mutable arguments persist between function calls, so the list keeps growing.",
+    "difficulty": 5,
+    "topic": "Python"
+  },
+  {
+    "id": 15,
+    "question": "What is the output of the following Python code?\n\n```python\nclass Meta(type):\n    def __new__(cls, name, bases, dct):\n        dct['x'] = 42\n        return super().__new__(cls, name, bases, dct)\n\nclass MyClass(metaclass=Meta):\n    pass\n\nobj = MyClass()\nprint(obj.x)\n```",
+    "options": [
+      "AttributeError",
+      "None",
+      "42",
+      "Error"
+    ],
+    "correct_answer": 2,
+    "explanation": "The metaclass modifies the class dictionary during creation and injects attribute 'x' with value 42.",
+    "difficulty": 5,
+    "topic": "Python"
+  }
+]
