@@ -7,6 +7,7 @@ from src.exceptions import AuthenticationError
 from fastapi.security import OAuth2PasswordRequestForm
 from src.entities.user import User
 
+
 class TestAuthService:
     def test_verify_password(self):
         password = "password123"
@@ -17,8 +18,10 @@ class TestAuthService:
     def test_authenticate_user(self, db_session, test_user):
         db_session.add(test_user)
         db_session.commit()
-        
-        user = auth_service.authenticate_user("test@example.com", "password123", db_session)
+
+        user = auth_service.authenticate_user(
+            "test@example.com", "password123", db_session
+        )
         assert user is not False
         assert user.email == test_user.email
 

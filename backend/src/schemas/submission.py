@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 
+
 class SubmissionCreate(BaseModel):
     question_id: int
     answer: int
     track_id: int
+
 
 class SubmissionOut(BaseModel):
     id: int

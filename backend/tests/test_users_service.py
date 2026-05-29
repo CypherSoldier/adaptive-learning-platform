@@ -51,9 +51,10 @@ def test_change_password_invalid_current(db_session, test_user):
         password_change = PasswordChange(
             current_password="wrongpassword",
             new_password="newpassword123",
-            new_password_confirm="newpassword123"
+            new_password_confirm="newpassword123",
         )
         users_service.change_password(db_session, test_user.id, password_change)
+
 
 def test_change_password_mismatch(db_session, test_user):
     db_session.add(test_user)
@@ -64,6 +65,6 @@ def test_change_password_mismatch(db_session, test_user):
         password_change = PasswordChange(
             current_password="password123",
             new_password="newpassword123",
-            new_password_confirm="differentpassword"
+            new_password_confirm="differentpassword",
         )
-        users_service.change_password(db_session, test_user.id, password_change) 
+        users_service.change_password(db_session, test_user.id, password_change)

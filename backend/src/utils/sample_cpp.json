@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "question": "What does 'cout' stand for in C++?",
+    "options": [
+      "Common output",
+      "Character output",
+      "Console output",
+      "Controlled output"
+    ],
+    "correct_answer": 1,
+    "explanation": "'cout' stands for 'character output'. It is part of the standard library and is used to print output to the standard output stream (usually the console).",
+    "difficulty": 1,
+    "topic": "C++"
+  },
+  {
+    "id": 2,
+    "question": "Which of the following is the correct way to declare a constant variable in C++?",
+    "options": [
+      "constant int x = 5;",
+      "const int x = 5;",
+      "int const = 5;",
+      "final int x = 5;"
+    ],
+    "correct_answer": 1,
+    "explanation": "In C++, the 'const' keyword is used before the type to declare a constant variable. 'final' is a Java keyword, and the other options are syntactically incorrect.",
+    "difficulty": 1,
+    "topic": "C++"
+  },
+  {
+    "id": 3,
+    "question": "What is the file extension for a standard C++ source file?",
+    "options": [".c", ".cp", ".cpp", ".cxx"],
+    "correct_answer": 2,
+    "explanation": "While .c, .cp, and .cxx are sometimes used, .cpp is the most widely accepted and standard file extension for C++ source files.",
+    "difficulty": 1,
+    "topic": "C++"
+  },
+  {
+    "id": 4,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nint main() {\n    int x = 10;\n    std::cout << x++ << \" \" << ++x;\n    return 0;\n}\n```",
+    "options": ["10 12", "11 12", "10 11", "Undefined behavior"],
+    "correct_answer": 3,
+    "explanation": "Modifying a variable more than once between sequence points (prior to C++17) is undefined behavior. In C++17, operands of operators are evaluated left-to-right, but mixing post-increment and pre-increment on the same variable in one expression is still a common source of undefined or implementation-defined behavior depending on the compiler.",
+    "difficulty": 2,
+    "topic": "C++"
+  },
+  {
+    "id": 5,
+    "question": "Which of the following correctly declares a reference variable in C++?",
+    "options": ["int &ref = x;", "int *ref = x;", "ref int = x;", "int ref& = x;"],
+    "correct_answer": 0,
+    "explanation": "In C++, a reference variable is declared using the '&' symbol placed after the type: 'int &ref = x;'. The '*' is used for pointers, and the other options are syntactically invalid.",
+    "difficulty": 2,
+    "topic": "C++"
+  },
+  {
+    "id": 6,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nint main() {\n    int arr[] = {1, 2, 3, 4, 5};\n    std::cout << sizeof(arr) / sizeof(arr[0]);\n    return 0;\n}\n```",
+    "options": ["1", "4", "5", "20"],
+    "correct_answer": 2,
+    "explanation": "'sizeof(arr)' returns the total size of the array in bytes (5 * 4 = 20 bytes on most systems), and 'sizeof(arr[0])' returns the size of one element (4 bytes for int). Dividing gives 5, the number of elements.",
+    "difficulty": 2,
+    "topic": "C++"
+  },
+  {
+    "id": 7,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\n#include <vector>\nint main() {\n    std::vector<int> v = {1, 2, 3};\n    v.push_back(4);\n    std::cout << v[v.size() - 1];\n    return 0;\n}\n```",
+    "options": ["3", "4", "v.size() - 1", "Undefined behavior"],
+    "correct_answer": 1,
+    "explanation": "After pushing 4 onto the vector, it contains {1, 2, 3, 4}. v.size() returns 4, so v[3] accesses the last element, which is 4.",
+    "difficulty": 3,
+    "topic": "C++"
+  },
+  {
+    "id": 8,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nclass Base {\npublic:\n    virtual void print() { std::cout << \"Base\"; }\n};\nclass Derived : public Base {\npublic:\n    void print() { std::cout << \"Derived\"; }\n};\nint main() {\n    Base* b = new Derived();\n    b->print();\n    return 0;\n}\n```",
+    "options": ["Base", "Derived", "BaseDerived", "Compilation error"],
+    "correct_answer": 1,
+    "explanation": "Because 'print()' is declared as 'virtual' in the Base class, C++ uses dynamic dispatch. Even though 'b' is a Base pointer, it points to a Derived object, so Derived::print() is called at runtime.",
+    "difficulty": 3,
+    "topic": "C++"
+  },
+  {
+    "id": 9,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nint main() {\n    int x = 5;\n    int* p = &x;\n    int** pp = &p;\n    **pp = 20;\n    std::cout << x;\n    return 0;\n}\n```",
+    "options": ["5", "20", "Address of x", "Undefined behavior"],
+    "correct_answer": 1,
+    "explanation": "'pp' is a pointer to a pointer. '**pp' dereferences twice: first to get 'p' (which points to 'x'), then to get 'x' itself. Assigning 20 to '**pp' sets x to 20, so the output is 20.",
+    "difficulty": 3,
+    "topic": "C++"
+  },
+  {
+    "id": 10,
+    "question": "In C++, which memory order guarantees that all prior writes in the current thread are visible to other threads that observe the atomic store?",
+    "options": [
+      "std::memory_order_relaxed",
+      "std::memory_order_consume",
+      "std::memory_order_release",
+      "std::memory_order_acquire"
+    ],
+    "correct_answer": 2,
+    "explanation": "'std::memory_order_release' ensures that all memory writes before the store in the current thread are visible to threads that subsequently perform an acquire operation on the same atomic variable. 'relaxed' has no ordering guarantees, 'consume' is weaker, and 'acquire' is the paired counterpart for loads.",
+    "difficulty": 4,
+    "topic": "C++"
+  },
+  {
+    "id": 11,
+    "question": "What is the primary risk when using 'std::async' with 'std::launch::async' and storing the returned 'std::future' in a variable that goes out of scope immediately?",
+    "options": [
+      "The thread is detached and runs freely",
+      "The destructor of std::future blocks until the task completes",
+      "The async task is silently cancelled",
+      "A data race occurs on the return value"
+    ],
+    "correct_answer": 1,
+    "explanation": "When a std::future returned by std::async goes out of scope, its destructor blocks (joins) until the associated async task completes. This can cause unexpected blocking behavior if the future is not stored or explicitly managed.",
+    "difficulty": 4,
+    "topic": "C++"
+  },
+  {
+    "id": 12,
+    "question": "Which of the following correctly describes the behavior of 'std::mutex' vs 'std::recursive_mutex' in C++?",
+    "options": [
+      "A std::mutex can be locked multiple times by the same thread without deadlocking",
+      "A std::recursive_mutex is faster than std::mutex because it skips ownership checks",
+      "Locking a std::mutex twice from the same thread causes undefined behavior, while std::recursive_mutex allows it",
+      "Both behave identically; the difference is only in naming convention"
+    ],
+    "correct_answer": 2,
+    "explanation": "Attempting to lock a std::mutex more than once from the same thread (without unlocking in between) causes undefined behavior (typically a deadlock). std::recursive_mutex explicitly allows the same thread to lock it multiple times, keeping an internal counter that must be decremented by an equal number of unlocks.",
+    "difficulty": 4,
+    "topic": "C++"
+  },
+  {
+    "id": 13,
+    "question": "What is the output of the following C++ code involving template specialization?\n\n```cpp\n#include <iostream>\ntemplate<typename T>\nvoid foo(T) { std::cout << \"primary\"; }\n\ntemplate<>\nvoid foo(int*) { std::cout << \"int*\"; }\n\ntemplate<typename T>\nvoid foo(T*) { std::cout << \"T*\"; }\n\nint main() {\n    int* p = nullptr;\n    foo(p);\n    return 0;\n}\n```",
+    "options": ["primary", "int*", "T*", "Compilation error"],
+    "correct_answer": 2,
+    "explanation": "Overload resolution considers all primary templates first and selects the best-matching one before considering specializations. The partial template overload 'foo(T*)' is a better match for 'int*' than the primary 'foo(T)', and since explicit specializations are tied to primary templates, the specialization 'foo(int*)' is a specialization of the primary — not of 'foo(T*)'. Overload resolution picks 'foo(T*)' and outputs 'T*'.",
+    "difficulty": 5,
+    "topic": "C++"
+  },
+  {
+    "id": 14,
+    "question": "What does the following C++ code print?\n\n```cpp\n#include <iostream>\nstruct A {\n    A() { std::cout << \"A\"; }\n    ~A() { std::cout << \"~A\"; }\n};\nstruct B : A {\n    B() { std::cout << \"B\"; }\n    ~B() { std::cout << \"~B\"; }\n};\nint main() {\n    A* obj = new B();\n    delete obj;\n    return 0;\n}\n```",
+    "options": ["AB~B~A", "AB~A", "AB~B", "Undefined behavior"],
+    "correct_answer": 3,
+    "explanation": "Deleting a derived class object through a base class pointer when the base destructor is not virtual is undefined behavior per the C++ standard. In practice, only ~A is called, causing a resource leak, but the behavior is formally undefined. The destructor must be declared virtual in A to ensure proper destruction.",
+    "difficulty": 5,
+    "topic": "C++"
+  },
+  {
+    "id": 15,
+    "question": "In C++, what is the result of the following expression involving SFINAE?\n\n```cpp\n#include <iostream>\n#include <type_traits>\ntemplate<typename T, typename = std::enable_if_t<std::is_integral_v<T>>>\nvoid check(T) { std::cout << \"integral\"; }\n\ntemplate<typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>\nvoid check(T) { std::cout << \"floating\"; }\n\nint main() {\n    check(3.14);\n    return 0;\n}\n```",
+    "options": [
+      "integral",
+      "floating",
+      "Compilation error due to ambiguous overload",
+      "Undefined behavior"
+    ],
+    "correct_answer": 2,
+    "explanation": "Both overloads of 'check' use a defaulted template parameter (typename = ...) as the SFINAE mechanism. Because default template arguments are not part of the function signature, the two overloads are considered identical signatures by the compiler and cause a redefinition error. The correct approach is to use the enable_if as the return type or as a non-type parameter to make the signatures distinct.",
+    "difficulty": 5,
+    "topic": "C++"
+  }
+]

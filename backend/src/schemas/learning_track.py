@@ -17,11 +17,9 @@ class LearningTrackCreate(LearningTrackBase):
 class LearningTrack(LearningTrackBase):
     id: int
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = {"from_attributes": True}
 
-        
+
 class JavascriptTrack(LearningTrack):
     name: str
     description: str

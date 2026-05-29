@@ -20,7 +20,7 @@ def db_session():
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    
+
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     try:
@@ -28,6 +28,7 @@ def db_session():
     finally:
         db.close()
         Base.metadata.drop_all(bind=engine)
+
 
 @pytest.fixture(scope="function")
 def test_user():
@@ -38,12 +39,14 @@ def test_user():
         email="test@example.com",
         first_name="Test",
         last_name="User",
-        password_hash=password_hash
+        password_hash=password_hash,
     )
+
 
 @pytest.fixture(scope="function")
 def test_token_data():
     return TokenData(user_id=str(uuid4()))
+
 
 @pytest.fixture(scope="function")
 def test_todo(test_token_data):
@@ -88,21 +91,21 @@ def auth_headers(client, db_session):
             "email": "test.user@example.com",
             "password": "testpassword123",
             "first_name": "Test",
-            "last_name": "User"
-        }
+            "last_name": "User",
+        },
     )
     assert response.status_code == 201
-    
+
     # Login to get access token
     response = client.post(
         "/auth/token",
         data={
             "username": "test.user@example.com",
             "password": "testpassword123",
-            "grant_type": "password"
-        }
+            "grant_type": "password",
+        },
     )
     assert response.status_code == 200
     token = response.json()["access_token"]
-    
-    return {"Authorization": f"Bearer {token}"} 
+
+    return {"Authorization": f"Bearer {token}"}

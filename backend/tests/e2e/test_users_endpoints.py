@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+
 def test_get_current_user(client: TestClient, auth_headers):
     response = client.get("/users/me", headers=auth_headers)
     assert response.status_code == 200
@@ -9,6 +10,7 @@ def test_get_current_user(client: TestClient, auth_headers):
     assert "last_name" in user_data
     assert "password_hash" not in user_data
 
+
 def test_change_password(client: TestClient, auth_headers):
     # Change password
     response = client.put(
@@ -17,8 +19,8 @@ def test_change_password(client: TestClient, auth_headers):
         json={
             "current_password": "testpassword123",
             "new_password": "newpassword123",
-            "new_password_confirm": "newpassword123"
-        }
+            "new_password_confirm": "newpassword123",
+        },
     )
     assert response.status_code == 200
 
@@ -28,10 +30,11 @@ def test_change_password(client: TestClient, auth_headers):
         data={
             "username": "test.user@example.com",
             "password": "newpassword123",
-            "grant_type": "password"
-        }
+            "grant_type": "password",
+        },
     )
     assert login_response.status_code == 200
+
 
 def test_password_change_validation(client: TestClient, auth_headers):
     # Test wrong current password
@@ -41,8 +44,8 @@ def test_password_change_validation(client: TestClient, auth_headers):
         json={
             "current_password": "wrongpassword",
             "new_password": "newpassword123",
-            "new_password_confirm": "newpassword123"
-        }
+            "new_password_confirm": "newpassword123",
+        },
     )
     assert response.status_code == 401
 
@@ -53,10 +56,11 @@ def test_password_change_validation(client: TestClient, auth_headers):
         json={
             "current_password": "testpassword123",
             "new_password": "newpassword123",
-            "new_password_confirm": "differentpassword123"
-        }
+            "new_password_confirm": "differentpassword123",
+        },
     )
     assert response.status_code == 400
+
 
 def test_user_endpoints_authorization(client: TestClient):
     # Try accessing user endpoints without auth
@@ -68,7 +72,7 @@ def test_user_endpoints_authorization(client: TestClient):
         json={
             "current_password": "testpassword123",
             "new_password": "newpassword123",
-            "new_password_confirm": "newpassword123"
-        }
+            "new_password_confirm": "newpassword123",
+        },
     )
-    assert response.status_code == 401 
+    assert response.status_code == 401

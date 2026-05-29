@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "question": "Which keyword is used to declare a variable in JavaScript that cannot be reassigned?",
+    "options": ["var", "let", "const", "static"],
+    "correct_answer": 2,
+    "explanation": "'const' declares a variable that cannot be reassigned after its initial assignment. Note that for objects and arrays declared with const, the contents can still be mutated — only the binding itself is immutable.",
+    "difficulty": 1,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 2,
+    "question": "What does 'DOM' stand for in web development?",
+    "options": [
+      "Data Object Model",
+      "Document Object Model",
+      "Dynamic Object Management",
+      "Document Oriented Markup"
+    ],
+    "correct_answer": 1,
+    "explanation": "DOM stands for Document Object Model. It is a programming interface for web documents that represents the page as a tree of nodes, allowing JavaScript to dynamically access and manipulate the content, structure, and styles of a webpage.",
+    "difficulty": 1,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 3,
+    "question": "Which of the following is the correct way to write a single-line comment in JavaScript?",
+    "options": [
+      "<!-- This is a comment -->",
+      "# This is a comment",
+      "// This is a comment",
+      "** This is a comment **"
+    ],
+    "correct_answer": 2,
+    "explanation": "In JavaScript, single-line comments begin with '//'. Multi-line comments use '/* */'. The '<!--' syntax is for HTML, and '#' is used in languages like Python and Bash.",
+    "difficulty": 1,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 4,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconsole.log(typeof null);\n```",
+    "options": ["\"null\"", "\"undefined\"", "\"object\"", "\"boolean\""],
+    "correct_answer": 2,
+    "explanation": "This is a well-known JavaScript quirk. 'typeof null' returns 'object', which is considered a bug in the language dating back to its original implementation. null is not actually an object, but this behavior has been kept for backwards compatibility.",
+    "difficulty": 2,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 5,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconsole.log(0.1 + 0.2 === 0.3);\n```",
+    "options": ["true", "false", "undefined", "NaN"],
+    "correct_answer": 1,
+    "explanation": "Due to floating-point precision issues in IEEE 754 arithmetic (used by JavaScript), 0.1 + 0.2 evaluates to 0.30000000000000004, not exactly 0.3. Therefore the strict equality check returns false.",
+    "difficulty": 2,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 6,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconst arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr.length);\n```",
+    "options": ["3", "4", "undefined", "TypeError"],
+    "correct_answer": 1,
+    "explanation": "Even though 'arr' is declared with 'const', the array contents can still be mutated. push(4) adds an element, making the array [1, 2, 3, 4] with a length of 4. 'const' only prevents reassignment of the variable binding, not mutation of the object it points to.",
+    "difficulty": 2,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 7,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconsole.log([] + []);\nconsole.log([] + {});\nconsole.log({} + []);\n```",
+    "options": [
+      "\"\", \"[object Object]\", 0",
+      "\"\", \"[object Object]\", \"[object Object]\"",
+      "0, NaN, 0",
+      "\"\", \"\", 0"
+    ],
+    "correct_answer": 1,
+    "explanation": "[] + [] coerces both arrays to empty strings, giving \"\". [] + {} coerces [] to \"\" and {} to \"[object Object]\", giving \"[object Object]\". In the third case, when {} appears at the start of a statement it is parsed as an empty block (not an object), making it equivalent to +[], which coerces [] to 0. However in console.log({} + []), the {} is inside an expression context and becomes \"[object Object]\" + \"\" = \"[object Object]\".",
+    "difficulty": 3,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 8,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}\n```",
+    "options": ["0 1 2", "0 0 0", "3 3 3", "undefined undefined undefined"],
+    "correct_answer": 2,
+    "explanation": "Because 'var' is function-scoped (not block-scoped), all three closures share the same 'i' variable. By the time the setTimeout callbacks execute (after the loop finishes), i has been incremented to 3. Using 'let' instead of 'var' would capture a new binding per iteration and print 0 1 2.",
+    "difficulty": 3,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 9,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconst obj = { a: 1 };\nconst clone = Object.assign({}, obj);\nclone.a = 99;\nconsole.log(obj.a);\n```",
+    "options": ["99", "1", "undefined", "ReferenceError"],
+    "correct_answer": 1,
+    "explanation": "Object.assign performs a shallow copy. Since 'a' is a primitive value, it is copied by value into 'clone'. Modifying clone.a does not affect obj.a. Had 'a' been a nested object, changes to its properties would have reflected in both, since only the reference would have been copied.",
+    "difficulty": 3,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 10,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nasync function fetchData() {\n  return 42;\n}\nconst result = fetchData();\nconsole.log(result instanceof Promise);\nconsole.log(result);\n```",
+    "options": [
+      "false, 42",
+      "true, Promise { 42 }",
+      "true, 42",
+      "false, Promise { 42 }"
+    ],
+    "correct_answer": 1,
+    "explanation": "An async function always returns a Promise, even when it returns a plain value. The returned value (42) becomes the resolved value of the Promise. So 'result instanceof Promise' is true, and logging 'result' shows Promise { 42 } (fulfilled with 42). To get 42 directly, you must await it.",
+    "difficulty": 4,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 11,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nPromise.resolve(1)\n  .then(v => { throw new Error('oops'); })\n  .then(v => console.log('then:', v))\n  .catch(e => console.log('catch:', e.message))\n  .then(() => console.log('final'));\n```",
+    "options": [
+      "then: undefined, final",
+      "catch: oops",
+      "catch: oops, final",
+      "Unhandled Promise rejection"
+    ],
+    "correct_answer": 2,
+    "explanation": "The first .then throws an error, which skips the second .then and is caught by .catch. Since .catch also returns a resolved promise (it handled the error), the final .then executes and logs 'final'. This demonstrates that .catch in a promise chain acts like a recovery step and the chain continues afterward.",
+    "difficulty": 4,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 12,
+    "question": "Which of the following best describes the JavaScript Event Loop's handling of microtasks vs macrotasks?",
+    "options": [
+      "Macrotasks (setTimeout) are always processed before microtasks (Promises)",
+      "Microtasks (Promises) are processed after each macrotask, before the next macrotask is picked from the queue",
+      "Microtasks and macrotasks are processed in the order they are queued, with no priority difference",
+      "Microtasks run on a separate thread from macrotasks"
+    ],
+    "correct_answer": 1,
+    "explanation": "After each macrotask (e.g., a setTimeout callback) completes, the JavaScript engine processes the entire microtask queue (Promise callbacks, queueMicrotask) before picking up the next macrotask. This means Promise .then callbacks will always run before the next setTimeout, even if both are already queued.",
+    "difficulty": 4,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 13,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nfunction* gen() {\n  yield 1;\n  yield 2;\n  return 3;\n  yield 4;\n}\nconst g = gen();\nconsole.log([...g]);\n```",
+    "options": ["[1, 2, 3, 4]", "[1, 2, 3]", "[1, 2]", "[1, 2, undefined]"],
+    "correct_answer": 2,
+    "explanation": "The spread operator uses the iterator protocol and stops when 'done: true' is returned. A 'return' statement in a generator sets done to true and the returned value is NOT included in spread or for...of results. 'yield 4' is unreachable. So only the yielded values 1 and 2 are collected.",
+    "difficulty": 5,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 14,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconst handler = {\n  get(target, key) {\n    return key in target ? target[key] : 37;\n  }\n};\nconst p = new Proxy({}, handler);\np.a = 1;\nconsole.log(p.a, p.b);\n```",
+    "options": ["1, undefined", "1, null", "1, 37", "undefined, 37"],
+    "correct_answer": 2,
+    "explanation": "A Proxy intercepts property access via the 'get' trap. When p.a is accessed, 'a' exists in the target object (it was set to 1), so it returns 1. When p.b is accessed, 'b' does not exist in the target, so the trap returns the fallback value 37.",
+    "difficulty": 5,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 15,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nclass A {\n  #x = 10;\n  getX() { return this.#x; }\n}\nclass B extends A {\n  #x = 20;\n  getY() { return this.#x; }\n}\nconst b = new B();\nconsole.log(b.getX(), b.getY());\n```",
+    "options": ["20, 20", "10, 10", "10, 20", "TypeError: Cannot read private field"],
+    "correct_answer": 2,
+    "explanation": "Private class fields (#x) are scoped to the class body in which they are declared — they are not inherited or shared. A's #x and B's #x are entirely separate fields on the same object instance. getX() in class A accesses A's private #x (10), and getY() in class B accesses B's own private #x (20). Both coexist independently.",
+    "difficulty": 5,
+    "topic": "JavaScript"
+  }
+]

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Time
 from src.database.session import Base
 
+
 class Submission(Base):
     __tablename__ = "submissions"
     id = Column(Integer, primary_key=True)

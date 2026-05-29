@@ -1,14 +1,13 @@
 from fastapi.testclient import TestClient
 from ...src.schemas.auth import RegisterUserRequest
 
+
 def test_register_and_login_flow(client: TestClient):
     # Test registration
     register_data = RegisterUserRequest(
-        email="test.user@example.com",
-        password="testpassword123",
-        full_name="test name"
+        email="test.user@example.com", password="testpassword123", full_name="test name"
     )
-    
+
     response = client.post("/auth/", json=register_data.model_dump())
     assert response.status_code == 201
 
@@ -18,13 +17,14 @@ def test_register_and_login_flow(client: TestClient):
         data={
             "username": register_data.email,
             "password": register_data.password,
-            "grant_type": "password"
-        }
+            "grant_type": "password",
+        },
     )
     assert login_response.status_code == 200
     token_data = login_response.json()
     assert "access_token" in token_data
     assert token_data["token_type"] == "bearer"
+
 
 def test_login_failures(client: TestClient):
     # Test login with non-existent user
@@ -33,8 +33,8 @@ def test_login_failures(client: TestClient):
         data={
             "username": "nonexistent@example.com",
             "password": "wrongpassword",
-            "grant_type": "password"
-        }
+            "grant_type": "password",
+        },
     )
     assert response.status_code == 401
 
@@ -44,10 +44,11 @@ def test_login_failures(client: TestClient):
         data={
             "username": "test.user@example.com",
             "password": "wrongpassword",
-            "grant_type": "password"
-        }
+            "grant_type": "password",
+        },
     )
     assert response.status_code == 401
+
 
 def test_rate_limiting(client: TestClient):
     # Test rate limiting on registration
@@ -57,7 +58,7 @@ def test_rate_limiting(client: TestClient):
             json={
                 "email": f"test{_}@example.com",
                 "password": "testpassword123",
-                "full_name": "test_name"
-            }
+                "full_name": "test_name",
+            },
         )
-    assert response.status_code == 429  # Too Many Requests 
+    assert response.status_code == 429  # Too Many Requests
