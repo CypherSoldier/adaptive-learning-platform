@@ -6,7 +6,7 @@ interface AvatarDemoProps {
   user: User | null | undefined
 }
 
-// Binding element 'user' implicitly has an 'any' type.
+
 export function AvatarDemo({ user }: AvatarDemoProps) {
   console.log('User:', user);
   console.log('User image:', user?.photoURL);

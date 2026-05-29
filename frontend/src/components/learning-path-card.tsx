@@ -52,8 +52,9 @@ export function LearningPathCard({
         <h3 className="mt-5 text-xl font-semibold text-foreground">{title}</h3>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
       </div>
-
+      
       <div className="mt-6">
+        {/* -> Implement progress bar at a later stage
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span>{modules} modules</span>
           <span className="text-border">&#8226;</span>
@@ -71,6 +72,7 @@ export function LearningPathCard({
             }
           />
         </div>
+        */}
 
         <Link
           href={`/learn/${slug}`}
