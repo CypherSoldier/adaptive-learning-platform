@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
             setAxiosToken(token);
  
             try {
-                const response = await axios.get("http://localhost:8000/users/me");
+                const response = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`);
                 if (!cancelled) {
                     const u = response.data;
                     applySession(token, {
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (full_name, email, password) => {
         try {
-            const response = await axios.post("http://localhost:8000/auth/", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/`, {
                 full_name,
                 email,
                 password,
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
 
             const idToken = await firebaseUser.getIdToken();
 
-            const response = await axios.post("http://localhost:8000/auth/google", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
                 token: idToken
             });
 
@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
             formData.append("username", email);
             formData.append("password", password);
 
-            const response = await axios.post("http://localhost:8000/auth/token", formData, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/token`, formData, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
@@ -153,7 +153,7 @@ export const AuthProvider = ({ children }) => {
                 });
  
             // Fetch full profile in the background
-            axios.get("http://localhost:8000/users/me").then((r) => {
+            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`).then((r) => {
                 const u = r.data;
                 setUser((prev) => ({
                 ...prev,

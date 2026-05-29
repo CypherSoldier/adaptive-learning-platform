@@ -41,7 +41,7 @@ export default function ProgressPage() {
     if (!user?.uid) return; 
  
     axios
-      .get(`http://localhost:8000/users/skill-profiles?user_id=${user.id}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/users/skill-profiles?user_id=${user.id}`)
       .then((response) => {
         setProgress(response.data);
       })

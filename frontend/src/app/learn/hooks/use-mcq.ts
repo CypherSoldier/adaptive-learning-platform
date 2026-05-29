@@ -76,7 +76,7 @@ export function useMCQ(trackId: number) {
   useEffect(() => {
     if (!isLoggedIn) return;
     axios
-      .get(`http://localhost:8000/questions/${trackId}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`)
       .then((res) => {
         setData(res.data);
         setLoading(false);
@@ -108,7 +108,7 @@ export function useMCQ(trackId: number) {
 
     if (isLoggedIn) {
     try {
-      const response = await axios.post('http://localhost:8000/submissions', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/submissions`, {
         question_id: question.id,
         answer,
         track_id: trackId,
