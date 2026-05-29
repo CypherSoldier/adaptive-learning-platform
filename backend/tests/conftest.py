@@ -52,29 +52,32 @@ def test_todo(test_token_data):
         description="Test Description",
         is_completed=False,
         created_at=datetime.now(timezone.utc),
-        user_id=test_token_data.get_uuid()
+        user_id=test_token_data.get_uuid(),
     )
+
 
 @pytest.fixture(scope="function")
 def client(db_session):
     from src.main import app
     from src.database.core import get_db
-    
+
     # Disable rate limiting for tests
     limiter.reset()
-    
+
     def override_get_db():
         try:
             yield db_session
         finally:
             db_session.close()
-            
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     from fastapi.testclient import TestClient
+
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
 
 @pytest.fixture(scope="function")
 def auth_headers(client, db_session):

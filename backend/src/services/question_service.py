@@ -5,20 +5,59 @@ from ..models.topic import Topic
 from src.models.learning_track import LearningTrack
 from fastapi import HTTPException, Depends
 from src.database.session import get_db
-from src.services.auth_service import get_current_user  # ← Google user support
+from src.services.auth_service import get_current_user
 
-def list_questions(db: Session):
-    return db.query(Question).all()
+MIN_QUESTIONS = 15
+DIFFICULTY_MAX = 5
 
-'''
+def list_questions(
+    db: Session,
+    track_id: int,
+    source: str | None = None,
+    skill_score: float | None = None,
+):
+    base = db.query(Question).filter(Question.track_id == track_id)
+    if source:
+        base = base.filter(Question.source == source)
+
+    if skill_score is None:
+        return base.all()
+
+    target = 1 + skill_score * (DIFFICULTY_MAX - 1)
+
+    lower = max(1, round(target - 1))
+    upper = min(DIFFICULTY_MAX, round(target + 1))
+
+    questions = base.filter(
+        Question.difficulty >= lower,
+        Question.difficulty <= upper,
+    ).all()
+
+    if len(questions) < MIN_QUESTIONS:
+        questions = base.filter(
+            Question.difficulty >= DIFFICULTY_MAX - 1,
+        ).all()
+
+    if len(questions) < MIN_QUESTIONS:
+        questions = base.all()
+
+    return questions
+
+
+"""
 def get_skill_profile(user_profile: UserSkillProfile = Depends()):
     return user_profile
-'''
+"""
+
+
 def get_user_skill_profile(user_id: int, track_id: int, db: Session):
-    profile = db.query(UserSkillProfile).filter(
-        UserSkillProfile.user_id == user_id,
-        UserSkillProfile.track_id == track_id
-    ).first()
+    profile = (
+        db.query(UserSkillProfile)
+        .filter(
+            UserSkillProfile.user_id == user_id, UserSkillProfile.track_id == track_id
+        )
+        .first()
+    )
 
     if not profile:
         profile = UserSkillProfile(
@@ -26,21 +65,20 @@ def get_user_skill_profile(user_id: int, track_id: int, db: Session):
             track_id=track_id,
             skill_score=0.3,
             confidence_score=0.3,
-            attempts=0
+            attempts=0,
         )
         db.add(profile)
         db.commit()
         db.refresh(profile)
     return profile
-    
 
-# NEW: Return ALL tracks for the current user (used by skill-profile page)
+
 def get_user_skill_profiles(db: Session, user_id: int):
     profiles = (
         db.query(
             UserSkillProfile,
             LearningTrack.name.label("track_name"),
-            LearningTrack.track_type.label("track_type")
+            LearningTrack.track_type.label("track_type"),
         )
         .join(LearningTrack, LearningTrack.id == UserSkillProfile.track_id)
         .filter(UserSkillProfile.user_id == user_id)
@@ -66,8 +104,8 @@ def get_curated_questions_for_topic(topic_id: int, topic: Topic):
     # if topic_id matches the topic chosen
     # then fetch the questions that have matching topic_ids
     # return questions
-    # profile = get_user_skill_profile(user_id, track_id, db)   # now per-track
-    # curated = await get_curated_questions_for_topic(...)   # your future logic
+    # profile = get_user_skill_profile(user_id, track_id, db)
+    # curated = await get_curated_questions_for_topic(...)
     # return curated[0] if curated else fallback
     # return {"message": "next question logic ready – using per-track profile"}
     pass
@@ -75,7 +113,9 @@ def get_curated_questions_for_topic(topic_id: int, topic: Topic):
 
 async def get_next_question(user_id: int, track_id: int):
     profile = await get_user_skill_profile()
-    curated = await get_curated_questions_for_topic(profile.topic_id, profile.skill_score)
+    curated = await get_curated_questions_for_topic(
+        profile.topic_id, profile.skill_score
+    )
     if curated:
         return curated[0]
     # Later → fall back to AI

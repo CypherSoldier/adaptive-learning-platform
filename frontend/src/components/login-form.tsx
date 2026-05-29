@@ -28,13 +28,14 @@ export function LoginForm({
   onGoogleClick,
   ...props
 }: LoginFormProps) {
-  const { login } = useContext(AuthContext);
+  const { login, error, setError } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null); 
     setFormData(prev => ({
       ...prev,
       email: e.target.value
@@ -42,6 +43,7 @@ export function LoginForm({
   }
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //setError(null); 
     setFormData(prev => ({
       ...prev,
       password: e.target.value
@@ -57,11 +59,13 @@ export function LoginForm({
         email: '',
         password: ''
       })
-      console.log('Logged in')
-    } catch (error) {
-      console.log('Failed to log in || Incorrect email/password')
+
+    } catch (err) {
+      //alert('Failed to log in. Please try again or create a new account.')
+      console.log('Failed to log in || Incorrect email/password', err)
     }
   }
+  
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -122,6 +126,7 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit" onClick={handleLogin}>Login</Button>
+                {error && (<p className="text-sm text-destructive text-center">{error}</p>)}
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <Link href="/signup">Sign up</Link>
                 </FieldDescription>

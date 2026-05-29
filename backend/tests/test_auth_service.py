@@ -33,11 +33,12 @@ class TestAuthService:
                 self.scope = ""
                 self.client_id = None
                 self.client_secret = None
-        
+
         form_data = FormData()
         token = auth_service.login_for_access_token(form_data, db_session)
         assert token.token_type == "bearer"
         assert token.access_token is not None
+
 
 @pytest.mark.asyncio
 async def test_register_user(db_session):
@@ -45,30 +46,34 @@ async def test_register_user(db_session):
         email="new@example.com",
         password="password123",
         first_name="New",
-        last_name="User"
+        last_name="User",
     )
     auth_service.register_user(db_session, request)
-    
+
     user = db_session.query(User).filter_by(email="new@example.com").first()
     assert user is not None
     assert user.email == "new@example.com"
     assert user.first_name == "New"
     assert user.last_name == "User"
 
+
 def test_create_and_verify_token(db_session):
     user_id = uuid4()
-    token = auth_service.create_access_token("test@example.com", user_id, timedelta(minutes=30))
-    
+    token = auth_service.create_access_token(
+        "test@example.com", user_id, timedelta(minutes=30)
+    )
+
     token_data = auth_service.verify_token(token)
     assert token_data.get_uuid() == user_id
 
     # Test invalid credentials
-    assert auth_service.authenticate_user("test@example.com", "wrongpassword", db_session) is False
+    assert (
+        auth_service.authenticate_user("test@example.com", "wrongpassword", db_session)
+        is False
+    )
 
     with pytest.raises(AuthenticationError):
         form_data = OAuth2PasswordRequestForm(
-            username="test@example.com",
-            password="wrongpassword",
-            scope=""
+            username="test@example.com", password="wrongpassword", scope=""
         )
-        auth_service.login_for_access_token(form_data, db_session) 
+        auth_service.login_for_access_token(form_data, db_session)

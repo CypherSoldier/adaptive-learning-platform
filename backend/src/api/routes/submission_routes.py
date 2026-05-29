@@ -7,7 +7,11 @@ from src.services.submission_service import submit
 
 router = APIRouter()
 
-@router.post("/", response_model=SubmissionResponse)
-def create_submission(submission_data: SubmissionCreate, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
-    return submit(db, current_user.user_id, submission_data)
 
+@router.post("/submissions", response_model=SubmissionResponse)
+def create_submission(
+    submission_data: SubmissionCreate,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return submit(db, current_user.user_id, submission_data)

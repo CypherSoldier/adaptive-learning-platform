@@ -9,5 +9,5 @@ class Question(Base):
     correct_answer = Column(Integer)
     explanation = Column(String)
     difficulty = Column(Integer)
-    track_id = Column(Integer, ForeignKey('learning_tracks.id'))
+    track_id = Column(Integer, ForeignKey("learning_tracks.id"))
     source = Column(String)

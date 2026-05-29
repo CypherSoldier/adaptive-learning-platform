@@ -1,20 +1,88 @@
 "use client"
-// changing to .ts causes problems, why?
 
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { auth, googleProvider } from '@/lib/firebase';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 
 const AuthContext = createContext();
+
+function parseJwt(token) {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(atob(base64));
+  } catch {
+    return null;
+  }
+}
+
+function setAxiosToken(token) {
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common["Authorization"];
+  }
+}
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [jwtLoggedIn, setJWTLogin] = useState(false);
+    const [authLoading, setAuthLoading] = useState(true);
     const [error, setError] = useState(null);
     const router = useRouter();
+
+    // Helpers
+    const applySession = useCallback((token, userProfile) => {
+        localStorage.setItem("token", token);
+        setAxiosToken(token);
+        setUser(userProfile);
+        setLoggedIn(true);
+    }, []);
+ 
+    const clearSession = useCallback(() => {
+        localStorage.removeItem("token");
+        setAxiosToken(null);
+        setUser(null);
+        setLoggedIn(false);
+    }, []);
+
+    // Rehydrate session on mount
+    useEffect(() => {
+        let cancelled = false;
+ 
+        const rehydrate = async () => {
+            const token = localStorage.getItem("token");
+ 
+            if (!token) {
+                setAuthLoading(false);
+                return;
+            }
+ 
+            setAxiosToken(token);
+ 
+            try {
+                const response = await axios.get("http://localhost:8000/users/me");
+                if (!cancelled) {
+                    const u = response.data;
+                    applySession(token, {
+                        user_id: String(u.user_id ?? u.id),
+                        uid: String(u.firebase_uid ?? u.user_id ?? u.id),
+                        email: u.email,
+                        full_name: u.full_name,
+                    });
+                }
+            } catch {
+                if (!cancelled) clearSession();
+            } finally {
+                if (!cancelled) setAuthLoading(false);
+            }
+        };
+ 
+        rehydrate();
+        return () => { cancelled = true; };
+    }, []);
 
     const register = async (full_name, email, password) => {
         try {
@@ -23,7 +91,7 @@ export const AuthProvider = ({ children }) => {
                 email,
                 password,
             });
-            console.log("Registration successful", response.data);
+            console.log("Registration successful");
             router.push('/login')
             return response.data;
         } catch (error) {
@@ -36,14 +104,28 @@ export const AuthProvider = ({ children }) => {
     const signInWithGoogle = async (e) => {
         e.preventDefault();
         try {
-          await signInWithPopup(auth, googleProvider);
-          
-          console.log("Signed in with Google")
-          setLoggedIn(true);
-          router.push("/");
+            const result = await signInWithPopup(auth, googleProvider);
+            const firebaseUser = result.user;
+
+            const idToken = await firebaseUser.getIdToken();
+
+            const response = await axios.post("http://localhost:8000/auth/google", {
+                token: idToken
+            });
+
+            const jwtToken = response.data.access_token;
+ 
+            applySession(jwtToken, {
+                user_id: String(response.data.user?.user_id ?? response.data.user?.id ?? ""),
+                uid: firebaseUser.uid,
+                email: firebaseUser.email,
+                full_name: firebaseUser.displayName,
+            });
+    
+            router.push("/");
         } catch (err) {
-          console.error("Google sign-in error:", err);
-          setError(err instanceof Error ? err.message : 'An unknown error occurred');
+            console.error("Google sign-in error:", err);
+            setError(err.message);
         }
     };
 
@@ -53,32 +135,57 @@ export const AuthProvider = ({ children }) => {
             formData.append("username", email);
             formData.append("password", password);
 
-            // call fastapi backend
             const response = await axios.post("http://localhost:8000/auth/token", formData, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
             });
-            axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.access_token}`;
-            localStorage.setItem("token", response.data.access_token);
-            setUser(response.data);
-            setLoggedIn(true);
-            setJWTLogin(true);
+
+            const token = response.data.access_token;
+ 
+            // Decode the JWT to get basic identity info without an extra round-trip,
+            const payload = parseJwt(token);
+            applySession(token, {
+                user_id: payload?.id ?? null,
+                uid: payload?.id ?? null,      
+                email: payload?.sub ?? email,
+                full_name: null,               
+                });
+ 
+            // Fetch full profile in the background
+            axios.get("http://localhost:8000/users/me").then((r) => {
+                const u = r.data;
+                setUser((prev) => ({
+                ...prev,
+                full_name: u.full_name,
+                user_id: String(u.user_id ?? u.id),
+                }));
+            }).catch(() => {});
+ 
             router.push("/");
-        } catch (error) {
-            console.error("Login failed:", error);
+        } catch (err) {
+            console.error("Login failed:", err);
+            const status = err.response?.status;
+            if (status === 401) {
+                setError("Invalid email or password. Please try again.");
+            } else if (status === 422) {
+                setError("Please enter a valid email and password.");
+            } else {
+                setError("Something went wrong. Please try again later.");
+            }
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        delete axios.defaults.headers.common["Authorization"];
-        setLoggedIn(false);
-        router.push("/login");
+    const logout = async () => {
+        try {
+            if (auth.currentUser) await auth.signOut();
+        } catch { /* ignore */ }
+            clearSession();
+            router.push("/login");
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, isLoggedIn, signInWithGoogle, jwtLoggedIn }}>
+        <AuthContext.Provider value={{ user, login, logout, register, isLoggedIn, signInWithGoogle, setLoggedIn, authLoading, error, setError }}>
             {children}
         </AuthContext.Provider>
     );

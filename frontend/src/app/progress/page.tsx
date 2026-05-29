@@ -3,37 +3,18 @@
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { TrackProgressCard } from "@/components/track-progress-card"
-import { useEffect, useState, useContext, useEffectEvent } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from 'axios';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
 import AuthContext from "@/app/context/AuthContext"
+import { useRouter } from "next/navigation";
 
-// Sample data
-const trackData = [
-  {
-    title: "C++",
-    skillScore: 7.2,
-    confidenceScore: 8.5,
-    questionsAnswered: 48,
-    accentColor: "#22c55e",
-    iconBg: "#22c55e15",
-  },
-  {
-    title: "JavaScript",
-    skillScore: 5.8,
-    confidenceScore: 7.4,
-    questionsAnswered: 35,
-    accentColor: "#06b6d4",
-    iconBg: "#06b6d415",
-  },
+
+const colours = [
+  { accentColor: "#22c55e", iconBg: "#22c55e15" },
+  { accentColor: "#06b6d4", iconBg: "#06b6d415" },
+  { accentColor: "#3b82f6", iconBg: "#3b82f615" }
 ]
-interface User {
-  user_id: number;
-  email: string;
-  full_name: string;
-  password_hash: string;
-}
 
 interface SkillProfile {
   user_id: number;
@@ -45,45 +26,38 @@ interface SkillProfile {
 }
 
 export default function ProgressPage() {
-  const { jwtLoggedIn } = useContext(AuthContext);
+  const { user, isLoggedIn, authLoading } = useContext(AuthContext);
   const [progress, setProgress] = useState<SkillProfile[]>([]);
-  const [user, setUser] = useState<User>({
-    user_id: 0,
-    email: "",
-    full_name: "",
-    password_hash: ""
-  });
-  const [g_user] = useAuthState(auth);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const router = useRouter();
 
-  jwtLoggedIn && (
-    useEffect(() => {
-      axios.get('http://localhost:8000/users/me')
-        .then(response => {
-          setUser(response.data)
-          console.log('Retrieved current user')
-        })
-        .catch(error => {
-          console.error('Error fetching current user', error);
-        })
-    }, [])
-  )
-  
   useEffect(() => {
-    // how to get logged in user_id from JWT & Google?
-    // ${jwt ? user.user_id : g_user.id}
-    axios.get(`http://localhost:8000/users/skill-profiles?user_id=${jwtLoggedIn ? user.user_id : g_user?.providerData[0].uid}`)
-      .then(response => {
-        setProgress(response.data)
-        console.log('Retrieved Profile')
+    if (!authLoading && !isLoggedIn) {
+      router.push("/login?redirect=/progress");
+    }
+  }, [authLoading, isLoggedIn, router]);
+ 
+  useEffect(() => {
+    if (!user?.uid) return; 
+ 
+    axios
+      .get(`http://localhost:8000/users/skill-profiles?user_id=${user.id}`)
+      .then((response) => {
+        setProgress(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the profile', error);
+      .catch((error) => {
+        console.error("Error fetching skill profiles:", error);
+        setFetchError("Failed to load your progress. Please try again.");
       });
-  }, []);
-
-
-  console.log('Skill profile:', progress);
-  //console.log(user);
+  }, [user?.uid]); 
+ 
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -99,27 +73,41 @@ export default function ProgressPage() {
           </div>
 
           <div className="grid gap-6">
-            {progress.map((progress) => (
+            {fetchError && (
+              <p className="text-sm text-destructive">{fetchError}</p>
+            )}
+
+            {progress.length > 0 ? (
+              progress.map((profile, i) => (
+                <TrackProgressCard
+                  key={profile.id}
+                  title={profile.track_type}
+                  skillScore={Math.round(profile.skill_score * 100) / 100}
+                  confidenceScore={Math.round(profile.confidence_score * 100) / 100}
+                  accentColor={colours[i].accentColor}
+                  iconBg={colours[i].iconBg}
+                />
+              ))
+            ) : (
+              !fetchError && (
+                <p className="text-sm text-muted-foreground">
+                  No skill profiles found yet. Complete a learning session to see your progress here.
+                </p>
+              )
+            )}
+            {/*
+            <p className="mt-6 text-sm text-muted-foreground">Sample tracks (demo only):</p>
+            {trackData.map((track) => (
               <TrackProgressCard
-                key={progress.id}
-                title={progress.track_type}
-                skillScore={Math.round(progress.skill_score * 100) / 100}
-                confidenceScore={Math.round(progress.confidence_score * 100) / 100}
-                accentColor={"#3b82f6"}
-                iconBg={"#3b82f615"}
+                key={track.title}
+                title={track.title}
+                skillScore={track.skillScore}
+                confidenceScore={track.confidenceScore}
+                accentColor={track.accentColor}
+                iconBg={track.iconBg}
               />
             ))}
-              <p> Sample below (C++ & JavaScript)</p>
-              {trackData.map((track) => (
-                <TrackProgressCard
-                  key={track.title}
-                  title={track.title}
-                  skillScore={track.skillScore}
-                  confidenceScore={track.confidenceScore}
-                  accentColor={track.accentColor}
-                  iconBg={track.iconBg}
-                />
-              ))}
+            */}
           </div>
         </div>
       </main>

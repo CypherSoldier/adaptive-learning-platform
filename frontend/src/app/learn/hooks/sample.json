@@ -1,0 +1,472 @@
+[
+  {
+    "id": 1,
+    "question": "Which keyword is used to define a function in Python?",
+    "options": ["function", "def", "func", "lambda"],
+    "correct_answer": 1,
+    "explanation": "In Python, functions are defined using the 'def' keyword followed by the function name and parentheses.",
+    "difficulty": 1,
+    "topic": "Python"
+  },
+  {
+    "id": 2,
+    "question": "Which of the following is a valid Python variable name?",
+    "options": ["2value", "value-1", "value_1", "value 1"],
+    "correct_answer": 2,
+    "explanation": "Python variable names can contain letters, numbers, and underscores, but cannot start with a number or contain spaces or hyphens.",
+    "difficulty": 1,
+    "topic": "Python"
+  },
+  {
+    "id": 3,
+    "question": "What is the correct file extension for Python files?",
+    "options": [".py", ".python", ".pt", ".pyt"],
+    "correct_answer": 0,
+    "explanation": "Python source files use the .py extension.",
+    "difficulty": 1,
+    "topic": "Python"
+  },
+  {
+    "id": 4,
+    "question": "What is the output of the following Python code?\n\n```python\nprint(3 * \"Hi\")\n```",
+    "options": ["HiHiHi", "Hi Hi Hi", "Error", "3Hi"],
+    "correct_answer": 0,
+    "explanation": "Multiplying a string by an integer repeats the string that many times.",
+    "difficulty": 2,
+    "topic": "Python"
+  },
+  {
+    "id": 5,
+    "question": "What is the output of the following Python code?\n\n```python\nx = 5\nx += 3\nprint(x)\n```",
+    "options": ["5", "8", "3", "Error"],
+    "correct_answer": 1,
+    "explanation": "The += operator adds the value on the right to the variable. So 5 + 3 = 8.",
+    "difficulty": 2,
+    "topic": "Python"
+  },
+  {
+    "id": 6,
+    "question": "What is the output of the following Python code?\n\n```python\nnums = [1, 2, 3]\nnums.append(4)\nprint(len(nums))\n```",
+    "options": ["3", "4", "5", "Error"],
+    "correct_answer": 1,
+    "explanation": "The append() method adds a new element to the end of the list, increasing its length from 3 to 4.",
+    "difficulty": 2,
+    "topic": "Python"
+  },
+  {
+    "id": 7,
+    "question": "What is the output of the following Python code?\n\n```python\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)\n```",
+    "options": ["[1, 2, 3]", "[1, 2, 3, 4]", "[4]", "Error"],
+    "correct_answer": 1,
+    "explanation": "Both x and y reference the same list object. Modifying y also modifies x.",
+    "difficulty": 3,
+    "topic": "Python"
+  },
+  {
+    "id": 8,
+    "question": "What is the output of the following Python code?\n\n```python\nprint({i: i*i for i in range(3)})\n```",
+    "options": ["{0:0, 1:1, 2:4}", "[0, 1, 4]", "{1:1, 2:4, 3:9}", "Error"],
+    "correct_answer": 0,
+    "explanation": "This is a dictionary comprehension that maps each number to its square for values 0 through 2.",
+    "difficulty": 3,
+    "topic": "Python"
+  },
+  {
+    "id": 9,
+    "question": "What is the output of the following Python code?\n\n```python\ndef func(a, b=2, c=3):\n    return a + b + c\n\nprint(func(1, c=4))\n```",
+    "options": ["6", "7", "8", "Error"],
+    "correct_answer": 1,
+    "explanation": "a=1, b takes default value 2, and c is overridden to 4. So 1 + 2 + 4 = 7.",
+    "difficulty": 3,
+    "topic": "Python"
+  },
+  {
+    "id": 10,
+    "question": "What is the output of the following Python code?\n\n```python\nimport asyncio\n\nasync def main():\n    print(\"A\")\n    await asyncio.sleep(0)\n    print(\"B\")\n\nasyncio.run(main())\n```",
+    "options": ["B A", "A B", "Only A", "Error"],
+    "correct_answer": 1,
+    "explanation": "The coroutine prints 'A', then yields control with await, and then resumes to print 'B'.",
+    "difficulty": 4,
+    "topic": "Python"
+  },
+  {
+    "id": 11,
+    "question": "What is the main purpose of the Python Global Interpreter Lock (GIL)?",
+    "options": [
+      "To allow multiple threads to execute Python bytecode simultaneously",
+      "To ensure only one thread executes Python bytecode at a time",
+      "To prevent memory leaks",
+      "To manage async coroutines"
+    ],
+    "correct_answer": 1,
+    "explanation": "The GIL ensures that only one thread executes Python bytecode at a time, simplifying memory management in CPython.",
+    "difficulty": 4,
+    "topic": "Python"
+  },
+  {
+    "id": 12,
+    "question": "What is the output of the following Python code?\n\n```python\nimport threading\n\ncounter = 0\n\ndef increment():\n    global counter\n    for _ in range(1000):\n        counter += 1\n\nt1 = threading.Thread(target=increment)\nt2 = threading.Thread(target=increment)\n\nt1.start()\nt2.start()\n\nt1.join()\nt2.join()\n\nprint(counter)\n```",
+    "options": ["Exactly 2000", "Always 1000", "Possibly less than 2000", "Error"],
+    "correct_answer": 2,
+    "explanation": "Due to race conditions, the counter increment is not atomic and may result in a value less than 2000.",
+    "difficulty": 4,
+    "topic": "Python"
+  },
+  {
+    "id": 13,
+    "question": "What is the output of the following Python code?\n\n```python\nclass A:\n    def __init__(self):\n        self.value = 5\n\nclass B(A):\n    def __init__(self):\n        super().__init__()\n        self.value += 5\n\nb = B()\nprint(b.value)\n```",
+    "options": ["5", "10", "Error", "None"],
+    "correct_answer": 1,
+    "explanation": "Class B calls the parent constructor using super(), which sets value to 5, then adds 5 more, resulting in 10.",
+    "difficulty": 5,
+    "topic": "Python"
+  },
+  {
+    "id": 14,
+    "question": "What is the output of the following Python code?\n\n```python\ndef func(lst=[]):\n    lst.append(1)\n    return lst\n\nprint(func())\nprint(func())\n```",
+    "options": ["[1] then [1]", "[1] then [1, 1]", "[1, 1] then [1]", "Error"],
+    "correct_answer": 1,
+    "explanation": "Default mutable arguments persist between function calls, so the list keeps growing.",
+    "difficulty": 5,
+    "topic": "Python"
+  },
+  {
+    "id": 15,
+    "question": "What is the output of the following Python code?\n\n```python\nclass Meta(type):\n    def __new__(cls, name, bases, dct):\n        dct['x'] = 42\n        return super().__new__(cls, name, bases, dct)\n\nclass MyClass(metaclass=Meta):\n    pass\n\nobj = MyClass()\nprint(obj.x)\n```",
+    "options": ["AttributeError", "None", "42", "Error"],
+    "correct_answer": 2,
+    "explanation": "The metaclass modifies the class dictionary during creation and injects attribute 'x' with value 42.",
+    "difficulty": 5,
+    "topic": "Python"
+  },
+    {
+    "id": 16,
+    "question": "What does 'cout' stand for in C++?",
+    "options": [
+      "Common output",
+      "Character output",
+      "Console output",
+      "Controlled output"
+    ],
+    "correct_answer": 1,
+    "explanation": "'cout' stands for 'character output'. It is part of the standard library and is used to print output to the standard output stream (usually the console).",
+    "difficulty": 1,
+    "topic": "C++"
+  },
+  {
+    "id": 17,
+    "question": "Which of the following is the correct way to declare a constant variable in C++?",
+    "options": [
+      "constant int x = 5;",
+      "const int x = 5;",
+      "int const = 5;",
+      "final int x = 5;"
+    ],
+    "correct_answer": 1,
+    "explanation": "In C++, the 'const' keyword is used before the type to declare a constant variable. 'final' is a Java keyword, and the other options are syntactically incorrect.",
+    "difficulty": 1,
+    "topic": "C++"
+  },
+  {
+    "id": 18,
+    "question": "What is the file extension for a standard C++ source file?",
+    "options": [".c", ".cp", ".cpp", ".cxx"],
+    "correct_answer": 2,
+    "explanation": "While .c, .cp, and .cxx are sometimes used, .cpp is the most widely accepted and standard file extension for C++ source files.",
+    "difficulty": 1,
+    "topic": "C++"
+  },
+  {
+    "id": 19,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nint main() {\n    int x = 10;\n    std::cout << x++ << \" \" << ++x;\n    return 0;\n}\n```",
+    "options": ["10 12", "11 12", "10 11", "Undefined behavior"],
+    "correct_answer": 3,
+    "explanation": "Modifying a variable more than once between sequence points (prior to C++17) is undefined behavior. In C++17, operands of operators are evaluated left-to-right, but mixing post-increment and pre-increment on the same variable in one expression is still a common source of undefined or implementation-defined behavior depending on the compiler.",
+    "difficulty": 2,
+    "topic": "C++"
+  },
+  {
+    "id": 20,
+    "question": "Which of the following correctly declares a reference variable in C++?",
+    "options": ["int &ref = x;", "int *ref = x;", "ref int = x;", "int ref& = x;"],
+    "correct_answer": 0,
+    "explanation": "In C++, a reference variable is declared using the '&' symbol placed after the type: 'int &ref = x;'. The '*' is used for pointers, and the other options are syntactically invalid.",
+    "difficulty": 2,
+    "topic": "C++"
+  },
+  {
+    "id": 21,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nint main() {\n    int arr[] = {1, 2, 3, 4, 5};\n    std::cout << sizeof(arr) / sizeof(arr[0]);\n    return 0;\n}\n```",
+    "options": ["1", "4", "5", "20"],
+    "correct_answer": 2,
+    "explanation": "'sizeof(arr)' returns the total size of the array in bytes (5 * 4 = 20 bytes on most systems), and 'sizeof(arr[0])' returns the size of one element (4 bytes for int). Dividing gives 5, the number of elements.",
+    "difficulty": 2,
+    "topic": "C++"
+  },
+  {
+    "id": 22,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\n#include <vector>\nint main() {\n    std::vector<int> v = {1, 2, 3};\n    v.push_back(4);\n    std::cout << v[v.size() - 1];\n    return 0;\n}\n```",
+    "options": ["3", "4", "v.size() - 1", "Undefined behavior"],
+    "correct_answer": 1,
+    "explanation": "After pushing 4 onto the vector, it contains {1, 2, 3, 4}. v.size() returns 4, so v[3] accesses the last element, which is 4.",
+    "difficulty": 3,
+    "topic": "C++"
+  },
+  {
+    "id": 23,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nclass Base {\npublic:\n    virtual void print() { std::cout << \"Base\"; }\n};\nclass Derived : public Base {\npublic:\n    void print() { std::cout << \"Derived\"; }\n};\nint main() {\n    Base* b = new Derived();\n    b->print();\n    return 0;\n}\n```",
+    "options": ["Base", "Derived", "BaseDerived", "Compilation error"],
+    "correct_answer": 1,
+    "explanation": "Because 'print()' is declared as 'virtual' in the Base class, C++ uses dynamic dispatch. Even though 'b' is a Base pointer, it points to a Derived object, so Derived::print() is called at runtime.",
+    "difficulty": 3,
+    "topic": "C++"
+  },
+  {
+    "id": 24,
+    "question": "What is the output of the following C++ code?\n\n```cpp\n#include <iostream>\nint main() {\n    int x = 5;\n    int* p = &x;\n    int** pp = &p;\n    **pp = 20;\n    std::cout << x;\n    return 0;\n}\n```",
+    "options": ["5", "20", "Address of x", "Undefined behavior"],
+    "correct_answer": 1,
+    "explanation": "'pp' is a pointer to a pointer. '**pp' dereferences twice: first to get 'p' (which points to 'x'), then to get 'x' itself. Assigning 20 to '**pp' sets x to 20, so the output is 20.",
+    "difficulty": 3,
+    "topic": "C++"
+  },
+  {
+    "id": 25,
+    "question": "In C++, which memory order guarantees that all prior writes in the current thread are visible to other threads that observe the atomic store?",
+    "options": [
+      "std::memory_order_relaxed",
+      "std::memory_order_consume",
+      "std::memory_order_release",
+      "std::memory_order_acquire"
+    ],
+    "correct_answer": 2,
+    "explanation": "'std::memory_order_release' ensures that all memory writes before the store in the current thread are visible to threads that subsequently perform an acquire operation on the same atomic variable. 'relaxed' has no ordering guarantees, 'consume' is weaker, and 'acquire' is the paired counterpart for loads.",
+    "difficulty": 4,
+    "topic": "C++"
+  },
+  {
+    "id": 26,
+    "question": "What is the primary risk when using 'std::async' with 'std::launch::async' and storing the returned 'std::future' in a variable that goes out of scope immediately?",
+    "options": [
+      "The thread is detached and runs freely",
+      "The destructor of std::future blocks until the task completes",
+      "The async task is silently cancelled",
+      "A data race occurs on the return value"
+    ],
+    "correct_answer": 1,
+    "explanation": "When a std::future returned by std::async goes out of scope, its destructor blocks (joins) until the associated async task completes. This can cause unexpected blocking behavior if the future is not stored or explicitly managed.",
+    "difficulty": 4,
+    "topic": "C++"
+  },
+  {
+    "id": 27,
+    "question": "Which of the following correctly describes the behavior of 'std::mutex' vs 'std::recursive_mutex' in C++?",
+    "options": [
+      "A std::mutex can be locked multiple times by the same thread without deadlocking",
+      "A std::recursive_mutex is faster than std::mutex because it skips ownership checks",
+      "Locking a std::mutex twice from the same thread causes undefined behavior, while std::recursive_mutex allows it",
+      "Both behave identically; the difference is only in naming convention"
+    ],
+    "correct_answer": 2,
+    "explanation": "Attempting to lock a std::mutex more than once from the same thread (without unlocking in between) causes undefined behavior (typically a deadlock). std::recursive_mutex explicitly allows the same thread to lock it multiple times, keeping an internal counter that must be decremented by an equal number of unlocks.",
+    "difficulty": 4,
+    "topic": "C++"
+  },
+  {
+    "id": 28,
+    "question": "What is the output of the following C++ code involving template specialization?\n\n```cpp\n#include <iostream>\ntemplate<typename T>\nvoid foo(T) { std::cout << \"primary\"; }\n\ntemplate<>\nvoid foo(int*) { std::cout << \"int*\"; }\n\ntemplate<typename T>\nvoid foo(T*) { std::cout << \"T*\"; }\n\nint main() {\n    int* p = nullptr;\n    foo(p);\n    return 0;\n}\n```",
+    "options": ["primary", "int*", "T*", "Compilation error"],
+    "correct_answer": 2,
+    "explanation": "Overload resolution considers all primary templates first and selects the best-matching one before considering specializations. The partial template overload 'foo(T*)' is a better match for 'int*' than the primary 'foo(T)', and since explicit specializations are tied to primary templates, the specialization 'foo(int*)' is a specialization of the primary — not of 'foo(T*)'. Overload resolution picks 'foo(T*)' and outputs 'T*'.",
+    "difficulty": 5,
+    "topic": "C++"
+  },
+  {
+    "id": 29,
+    "question": "What does the following C++ code print?\n\n```cpp\n#include <iostream>\nstruct A {\n    A() { std::cout << \"A\"; }\n    ~A() { std::cout << \"~A\"; }\n};\nstruct B : A {\n    B() { std::cout << \"B\"; }\n    ~B() { std::cout << \"~B\"; }\n};\nint main() {\n    A* obj = new B();\n    delete obj;\n    return 0;\n}\n```",
+    "options": ["AB~B~A", "AB~A", "AB~B", "Undefined behavior"],
+    "correct_answer": 3,
+    "explanation": "Deleting a derived class object through a base class pointer when the base destructor is not virtual is undefined behavior per the C++ standard. In practice, only ~A is called, causing a resource leak, but the behavior is formally undefined. The destructor must be declared virtual in A to ensure proper destruction.",
+    "difficulty": 5,
+    "topic": "C++"
+  },
+  {
+    "id": 30,
+    "question": "In C++, what is the result of the following expression involving SFINAE?\n\n```cpp\n#include <iostream>\n#include <type_traits>\ntemplate<typename T, typename = std::enable_if_t<std::is_integral_v<T>>>\nvoid check(T) { std::cout << \"integral\"; }\n\ntemplate<typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>\nvoid check(T) { std::cout << \"floating\"; }\n\nint main() {\n    check(3.14);\n    return 0;\n}\n```",
+    "options": [
+      "integral",
+      "floating",
+      "Compilation error due to ambiguous overload",
+      "Undefined behavior"
+    ],
+    "correct_answer": 2,
+    "explanation": "Both overloads of 'check' use a defaulted template parameter (typename = ...) as the SFINAE mechanism. Because default template arguments are not part of the function signature, the two overloads are considered identical signatures by the compiler and cause a redefinition error. The correct approach is to use the enable_if as the return type or as a non-type parameter to make the signatures distinct.",
+    "difficulty": 5,
+    "topic": "C++"
+  },
+  {
+    "id": 31,
+    "question": "Which keyword is used to declare a variable in JavaScript that cannot be reassigned?",
+    "options": ["var", "let", "const", "static"],
+    "correct_answer": 2,
+    "explanation": "'const' declares a variable that cannot be reassigned after its initial assignment. Note that for objects and arrays declared with const, the contents can still be mutated — only the binding itself is immutable.",
+    "difficulty": 1,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 32,
+    "question": "What does 'DOM' stand for in web development?",
+    "options": [
+      "Data Object Model",
+      "Document Object Model",
+      "Dynamic Object Management",
+      "Document Oriented Markup"
+    ],
+    "correct_answer": 1,
+    "explanation": "DOM stands for Document Object Model. It is a programming interface for web documents that represents the page as a tree of nodes, allowing JavaScript to dynamically access and manipulate the content, structure, and styles of a webpage.",
+    "difficulty": 1,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 33,
+    "question": "Which of the following is the correct way to write a single-line comment in JavaScript?",
+    "options": [
+      "<!-- This is a comment -->",
+      "# This is a comment",
+      "// This is a comment",
+      "** This is a comment **"
+    ],
+    "correct_answer": 2,
+    "explanation": "In JavaScript, single-line comments begin with '//'. Multi-line comments use '/* */'. The '<!--' syntax is for HTML, and '#' is used in languages like Python and Bash.",
+    "difficulty": 1,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 34,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconsole.log(typeof null);\n```",
+    "options": ["\"null\"", "\"undefined\"", "\"object\"", "\"boolean\""],
+    "correct_answer": 2,
+    "explanation": "This is a well-known JavaScript quirk. 'typeof null' returns 'object', which is considered a bug in the language dating back to its original implementation. null is not actually an object, but this behavior has been kept for backwards compatibility.",
+    "difficulty": 2,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 35,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconsole.log(0.1 + 0.2 === 0.3);\n```",
+    "options": ["true", "false", "undefined", "NaN"],
+    "correct_answer": 1,
+    "explanation": "Due to floating-point precision issues in IEEE 754 arithmetic (used by JavaScript), 0.1 + 0.2 evaluates to 0.30000000000000004, not exactly 0.3. Therefore the strict equality check returns false.",
+    "difficulty": 2,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 36,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconst arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr.length);\n```",
+    "options": ["3", "4", "undefined", "TypeError"],
+    "correct_answer": 1,
+    "explanation": "Even though 'arr' is declared with 'const', the array contents can still be mutated. push(4) adds an element, making the array [1, 2, 3, 4] with a length of 4. 'const' only prevents reassignment of the variable binding, not mutation of the object it points to.",
+    "difficulty": 2,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 37,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconsole.log([] + []);\nconsole.log([] + {});\nconsole.log({} + []);\n```",
+    "options": [
+      "\"\", \"[object Object]\", 0",
+      "\"\", \"[object Object]\", \"[object Object]\"",
+      "0, NaN, 0",
+      "\"\", \"\", 0"
+    ],
+    "correct_answer": 1,
+    "explanation": "[] + [] coerces both arrays to empty strings, giving \"\". [] + {} coerces [] to \"\" and {} to \"[object Object]\", giving \"[object Object]\". In the third case, when {} appears at the start of a statement it is parsed as an empty block (not an object), making it equivalent to +[], which coerces [] to 0. However in console.log({} + []), the {} is inside an expression context and becomes \"[object Object]\" + \"\" = \"[object Object]\".",
+    "difficulty": 3,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 38,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}\n```",
+    "options": ["0 1 2", "0 0 0", "3 3 3", "undefined undefined undefined"],
+    "correct_answer": 2,
+    "explanation": "Because 'var' is function-scoped (not block-scoped), all three closures share the same 'i' variable. By the time the setTimeout callbacks execute (after the loop finishes), i has been incremented to 3. Using 'let' instead of 'var' would capture a new binding per iteration and print 0 1 2.",
+    "difficulty": 3,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 39,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconst obj = { a: 1 };\nconst clone = Object.assign({}, obj);\nclone.a = 99;\nconsole.log(obj.a);\n```",
+    "options": ["99", "1", "undefined", "ReferenceError"],
+    "correct_answer": 1,
+    "explanation": "Object.assign performs a shallow copy. Since 'a' is a primitive value, it is copied by value into 'clone'. Modifying clone.a does not affect obj.a. Had 'a' been a nested object, changes to its properties would have reflected in both, since only the reference would have been copied.",
+    "difficulty": 3,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 40,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nasync function fetchData() {\n  return 42;\n}\nconst result = fetchData();\nconsole.log(result instanceof Promise);\nconsole.log(result);\n```",
+    "options": [
+      "false, 42",
+      "true, Promise { 42 }",
+      "true, 42",
+      "false, Promise { 42 }"
+    ],
+    "correct_answer": 1,
+    "explanation": "An async function always returns a Promise, even when it returns a plain value. The returned value (42) becomes the resolved value of the Promise. So 'result instanceof Promise' is true, and logging 'result' shows Promise { 42 } (fulfilled with 42). To get 42 directly, you must await it.",
+    "difficulty": 4,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 41,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nPromise.resolve(1)\n  .then(v => { throw new Error('oops'); })\n  .then(v => console.log('then:', v))\n  .catch(e => console.log('catch:', e.message))\n  .then(() => console.log('final'));\n```",
+    "options": [
+      "then: undefined, final",
+      "catch: oops",
+      "catch: oops, final",
+      "Unhandled Promise rejection"
+    ],
+    "correct_answer": 2,
+    "explanation": "The first .then throws an error, which skips the second .then and is caught by .catch. Since .catch also returns a resolved promise (it handled the error), the final .then executes and logs 'final'. This demonstrates that .catch in a promise chain acts like a recovery step and the chain continues afterward.",
+    "difficulty": 4,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 42,
+    "question": "Which of the following best describes the JavaScript Event Loop's handling of microtasks vs macrotasks?",
+    "options": [
+      "Macrotasks (setTimeout) are always processed before microtasks (Promises)",
+      "Microtasks (Promises) are processed after each macrotask, before the next macrotask is picked from the queue",
+      "Microtasks and macrotasks are processed in the order they are queued, with no priority difference",
+      "Microtasks run on a separate thread from macrotasks"
+    ],
+    "correct_answer": 1,
+    "explanation": "After each macrotask (e.g., a setTimeout callback) completes, the JavaScript engine processes the entire microtask queue (Promise callbacks, queueMicrotask) before picking up the next macrotask. This means Promise .then callbacks will always run before the next setTimeout, even if both are already queued.",
+    "difficulty": 4,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 43,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nfunction* gen() {\n  yield 1;\n  yield 2;\n  return 3;\n  yield 4;\n}\nconst g = gen();\nconsole.log([...g]);\n```",
+    "options": ["[1, 2, 3, 4]", "[1, 2, 3]", "[1, 2]", "[1, 2, undefined]"],
+    "correct_answer": 2,
+    "explanation": "The spread operator uses the iterator protocol and stops when 'done: true' is returned. A 'return' statement in a generator sets done to true and the returned value is NOT included in spread or for...of results. 'yield 4' is unreachable. So only the yielded values 1 and 2 are collected.",
+    "difficulty": 5,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 44,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nconst handler = {\n  get(target, key) {\n    return key in target ? target[key] : 37;\n  }\n};\nconst p = new Proxy({}, handler);\np.a = 1;\nconsole.log(p.a, p.b);\n```",
+    "options": ["1, undefined", "1, null", "1, 37", "undefined, 37"],
+    "correct_answer": 2,
+    "explanation": "A Proxy intercepts property access via the 'get' trap. When p.a is accessed, 'a' exists in the target object (it was set to 1), so it returns 1. When p.b is accessed, 'b' does not exist in the target, so the trap returns the fallback value 37.",
+    "difficulty": 5,
+    "topic": "JavaScript"
+  },
+  {
+    "id": 45,
+    "question": "What is the output of the following JavaScript code?\n\n```js\nclass A {\n  #x = 10;\n  getX() { return this.#x; }\n}\nclass B extends A {\n  #x = 20;\n  getY() { return this.#x; }\n}\nconst b = new B();\nconsole.log(b.getX(), b.getY());\n```",
+    "options": ["20, 20", "10, 10", "10, 20", "TypeError: Cannot read private field"],
+    "correct_answer": 2,
+    "explanation": "Private class fields (#x) are scoped to the class body in which they are declared — they are not inherited or shared. A's #x and B's #x are entirely separate fields on the same object instance. getX() in class A accesses A's private #x (10), and getY() in class B accesses B's own private #x (20). Both coexist independently.",
+    "difficulty": 5,
+    "topic": "JavaScript"
+  }
+]

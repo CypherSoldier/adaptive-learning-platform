@@ -31,6 +31,7 @@ export function SignupForm({
     email: '',
     password: ''
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -55,6 +56,11 @@ export function SignupForm({
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError("Please enter a valid email address.");
+        return;
+      }   
 
     try {
       await register(formData.full_name, formData.email, formData.password);
@@ -63,9 +69,12 @@ export function SignupForm({
         email: '',
         password: ''
       });
+
+      console.log(formData);
       console.log("Registration successfull. You can now log in.")
     } catch (error) {
-      console.log("User may already exist || ERROR")
+      setError("Registration failed. Please try again.");
+      console.error("Registration failed:", error);
     }
   }
 
@@ -113,6 +122,7 @@ export function SignupForm({
                 </FieldDescription>
               </Field>
               <Field>
+                {error && <p className="text-sm text-destructive">{error}</p>}
                 <Button type="submit" onClick={handleRegister}>Create Account</Button>
                 <FieldDescription className="text-center">
                   Already have an account? <Link href="/login">Log in</Link>

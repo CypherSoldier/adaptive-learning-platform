@@ -13,15 +13,11 @@ class SubmissionOut(BaseModel):
     is_correct: bool
     track_id: int
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = {"from_attributes": True}
 
-# NEW: Combined response for the submit endpoint
+
 class SubmissionResponse(BaseModel):
     submission: SubmissionOut
-    updated_skill_profile: dict   # or create a small model if you want stricter typing
+    updated_skill_profile: dict 
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = {"from_attributes": True}
