@@ -6,7 +6,7 @@ Built with a clean separation of concerns, modern tech stack, and a focus on per
 
 ## 🚀 Features
 
-- **Adaptive Question Engine**: Automatically selects the next question based on user skill level, confidence, and learning track
+- **Adaptive Question Engine**: Automatically selects the next question based on user skill level, confidence, and learning track using Gemini AI API
 - **User Skill Profiling**: Tracks skill_score, confidence_score, and attempt history per learning track
 - **Submission & Evaluation System**: Records user answers with time tracking and correctness
 - **Authentication & User Management**: Secure password handling with change password functionality
@@ -17,7 +17,7 @@ Built with a clean separation of concerns, modern tech stack, and a focus on per
 ## Programming languages and frameworks used
 <div>
   <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python" alt="python" width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/fastapi/fastapi-original.svg" title="FastAPI" alt="fastapi" width="40" height="40"/>&nbsp;s
+  <img src="https://github.com/devicons/devicon/blob/master/icons/fastapi/fastapi-original.svg" title="FastAPI" alt="fastapi" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg" title="TypeScript" alt="typescript" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/nextjs/nextjs-original.svg" title="NextJS" alt="nextJS" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/javascript/javascript-original.svg" title="JavaScript" alt="javaScript" width="40" height="40"/>&nbsp;
@@ -28,9 +28,8 @@ Built with a clean separation of concerns, modern tech stack, and a focus on per
 
 
 ## 🧩 Core Functionality
-
 - User registration and authentication
-- Password change with validation
+- Google AI API for MCQ generation and skill tracking
 - Dynamic skill profile creation and updates
 - Submission tracking with automatic skill adjustment
 - Curated MCQ questions delivery per topic and skill level
