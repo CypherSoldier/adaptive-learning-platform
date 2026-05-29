@@ -1,9 +1,9 @@
+import os
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 from src.database.session import Base
 
-# ✅ Import each model ONCE — removed the duplicate 'user'
 from src.models import (
     user,
     question,
@@ -13,15 +13,17 @@ from src.models import (
     user_skill_profile,
 )
 
-# ✅ Set target_metadata ONCE, here — delete the second assignment below
 target_metadata = Base.metadata
 
 config = context.config
 
+# ✅ Add these three lines
+database_url = os.environ.get("DATABASE_URL")
+if database_url:
+    config.set_main_option("sqlalchemy.url", database_url)
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
-
-# ❌ DELETE the line: target_metadata = None  (was the Alembic default boilerplate)
 
 
 def run_migrations_offline() -> None:
