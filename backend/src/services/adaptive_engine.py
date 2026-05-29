@@ -21,10 +21,9 @@ def update_skill_after_submission(
         skill_profile.confidence_score = max(0.0, skill_profile.confidence_score - 0.04)
 
     skill_profile.attempts += 1
-    # skill_profile.last_updated = datetime.utcnow()
+
     current_difficulty = skill_profile.skill_score
 
-    # Difficulty adjustment
     if skill_profile.skill_score > 0.75:
         next_difficulty = min(5, current_difficulty + 1)
     elif skill_profile.skill_score < 0.35:
