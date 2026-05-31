@@ -16,7 +16,7 @@ app = FastAPI(title="Monolith Example")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://adaptive-learning-platform-sand.vercel.app/"],
+    allow_origins=["https://adaptive-learning-platform-sand.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
