@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Firebase Google Sign-In
+    // Firebase Google Sign-In 
     const signInWithGoogle = async (e) => {
         e.preventDefault();
         try {
