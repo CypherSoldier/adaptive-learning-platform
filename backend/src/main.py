@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from .database.session import engine, Base
+import os
 from .api import register_routes
 from .logging import configure_logging, LogLevels
 from .models.learning_track import LearningTrack
@@ -26,5 +27,13 @@ app.add_middleware(
 otherwise the tests will fail if not connected
 """
 Base.metadata.create_all(bind=engine)
+
+@app.get("/")
+async def root():
+    return {
+        "message": "Adaptive Learning Platform API is running!",
+        "status": "ok",
+        "environment": os.getenv("RAILWAY_ENVIRONMENT", "development")
+    }
 
 register_routes(app)
