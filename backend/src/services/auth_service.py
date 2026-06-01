@@ -2,6 +2,7 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 import os
+from dotenv import load_dotenv
 import jwt
 from jwt import PyJWTError
 from fastapi import Depends
@@ -14,13 +15,14 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from ..exceptions import AuthenticationError
 import logging
 
-SECRET_KEY = "sadasd_secret_"
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+FIREBASE_JWKS_URL = os.getenv("FIREBASE_JWKS_URL")
+FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID")
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-# JWK Set endpoint — keys in JSON Web Key format.
-FIREBASE_JWKS_URL = "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
-FIREBASE_PROJECT_ID = "fitness-auth-312aa"
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -35,7 +37,6 @@ def get_password_hash(password: str) -> str:
     return bcrypt_context.hash(password)
 
 
-# Email / password auth
 def authenticate_user(email: str, password: str, db: Session) -> "User | bool":
     user = db.query(User).filter(User.email == email).first()
     if not user or not verify_password(password, user.password_hash):
