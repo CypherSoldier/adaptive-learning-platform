@@ -10,7 +10,7 @@ from .models.submission import Submission
 from .models.user import User
 from .models.user_skill_profile import UserSkillProfile
 from fastapi.middleware.cors import CORSMiddleware
-from seed_initial_data import seed_questions, seed_tracks 
+from backend.src.seed_initial_data import seed_questions, seed_tracks 
 from contextlib import asynccontextmanager
 
 configure_logging(LogLevels.info)

@@ -14,7 +14,7 @@ def seed_tracks():
     """Seed learning tracks from sample_lt.json"""
     db: Session = SessionLocal()
     try:
-        json_path = "src/utils/sample_lt.json"
+        json_path = "utils/sample_lt.json"
         with open(json_path, "r", encoding="utf-8") as f:
             tracks_data = json.load(f)
 
@@ -44,9 +44,9 @@ def seed_questions():
     try:
         # Define your sample files
         sample_files = [
-            "src/utils/sample_py.json",
-            "src/utils/sample_cpp.json",
-            "src/utils/sample_js.json",
+            "utils/sample_py.json",
+            "utils/sample_cpp.json",
+            "utils/sample_js.json",
         ]
 
         total_seeded = 0
