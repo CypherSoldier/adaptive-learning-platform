@@ -1,6 +1,16 @@
-from fastapi import FastAPI
-from .database.session import engine, Base
 import os
+import sys
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+
+# Local relative imports
+from .database.session import engine, Base
 from .api import register_routes
 from .logging import configure_logging, LogLevels
 from .models.learning_track import LearningTrack
@@ -9,9 +19,7 @@ from .models.question import Question
 from .models.submission import Submission
 from .models.user import User
 from .models.user_skill_profile import UserSkillProfile
-from fastapi.middleware.cors import CORSMiddleware
 from seed_initial_data import seed_questions, seed_tracks 
-from contextlib import asynccontextmanager
 
 configure_logging(LogLevels.info)
 
