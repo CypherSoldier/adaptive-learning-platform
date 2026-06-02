@@ -40,7 +40,7 @@ def generate_mcq(topic: str, difficulty: int, count: int = 15) -> list[dict]:
         Use the following format for code questions:
         "What is the output of the following C++ code?\n\ncpp\nint arr[] = {10, 20, 30};\nint* p = arr;\nstd::cout << *(p + 2);\n"
         You can see we have included ``` from markdown just before the language (cpp), and after \n at the end, this is for rendering purposes on the frontend.
-        Generate 15 questions on the topic using difficulty level.
+        Generate 10 questions on the topic using difficulty level.
         Return as a JSON
     """
 

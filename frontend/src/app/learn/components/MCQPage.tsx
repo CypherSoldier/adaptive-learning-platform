@@ -35,7 +35,7 @@ export default function MCQ({ trackId }: { trackId: number }) {
 
   const handleNewSession = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`);
       const questions = response.data;
 
       if (questions.length === 0) {

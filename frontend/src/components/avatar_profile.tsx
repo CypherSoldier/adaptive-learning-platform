@@ -8,9 +8,6 @@ interface AvatarDemoProps {
 
 
 export function AvatarDemo({ user }: AvatarDemoProps) {
-  console.log('User:', user);
-  console.log('User image:', user?.photoURL);
-
   return (
     <Avatar>
       <AvatarImage

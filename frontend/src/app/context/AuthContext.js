@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
                 email,
                 password,
             });
-            console.log("Registration successful");
+            //console.log("Registration successful");
             router.push('/login')
             return response.data;
         } catch (error) {

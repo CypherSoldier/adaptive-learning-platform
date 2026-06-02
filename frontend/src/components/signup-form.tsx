@@ -70,8 +70,6 @@ export function SignupForm({
         password: ''
       });
 
-      console.log(formData);
-      console.log("Registration successfull. You can now log in.")
     } catch (error) {
       setError("Registration failed. Please try again.");
       console.error("Registration failed:", error);
