@@ -39,10 +39,10 @@ def get_ai_generated_questions(
     db: Session = Depends(get_db),
 ):
     user_id = current_user.user_id
-
+    '''
     if ai_question_service.is_first_time_user(db, user_id, track_id):
         raise HTTPException(status_code=404, detail="complete_seeded_session")
-
+    '''
     profile = get_user_skill_profile(user_id, track_id, db)
 
     questions = ai_question_service.generate_and_store_questions(
