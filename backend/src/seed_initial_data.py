@@ -44,9 +44,9 @@ def seed_questions():
     try:
         # Define your sample files
         sample_files = [
-            "utils/sample_py.json",
-            "utils/sample_cpp.json",
-            "utils/sample_js.json",
+            "src/utils/sample_py.json",
+            "src/utils/sample_cpp.json",
+            "src/utils/sample_js.json",
         ]
 
         total_seeded = 0
