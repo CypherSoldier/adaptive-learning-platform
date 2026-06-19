@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 FIRST_TIME_SKILL_THRESHOLD = 0.0
 BATCH_SIZE = 15
 
+'''
 def is_first_time_user(db: Session, user_id: int, track_id: int) -> bool:
     profile = (
     db.query(UserSkillProfile)
@@ -21,7 +22,7 @@ def is_first_time_user(db: Session, user_id: int, track_id: int) -> bool:
     )
 
     return profile is None or profile.skill_score == FIRST_TIME_SKILL_THRESHOLD
-
+'''
 
 def generate_and_store_questions(
     db: Session,
