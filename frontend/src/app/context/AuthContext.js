@@ -153,8 +153,8 @@ export const AuthProvider = ({ children }) => {
                 });
  
             // Fetch full profile in the background
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`).then((r) => {
-                const u = r.data;
+            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`).then((res) => {
+                const u = res.data;
                 setUser((prev) => ({
                 ...prev,
                 full_name: u.full_name,

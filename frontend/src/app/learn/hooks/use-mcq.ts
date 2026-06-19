@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import AuthContext from "@/app/context/AuthContext";
-import { Question, GradeEntry } from "../lib/types";
+import { Question, GradeEntry, SkillProfile } from "../lib/types";
 
 function grabHighDiff(question: Question, data: Question[]) {
     let highDiff = [];
@@ -15,7 +15,7 @@ function grabHighDiff(question: Question, data: Question[]) {
 }
 
 export function useMCQ(trackId: number) {
-  const { isLoggedIn, authLoading } = useContext(AuthContext);
+  const { isLoggedIn, authLoading, user } = useContext(AuthContext);
   const router = useRouter();
 
   const [data, setData] = useState<Question[]>([]);
@@ -26,26 +26,28 @@ export function useMCQ(trackId: number) {
   const [grade, setGrade] = useState<GradeEntry[]>([]);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [newUser, setNewUser] = useState(false);
+  const [skillProfile, setSkillProfile] = useState<SkillProfile | null>(null);
 
   // Ref mirrors data so submitAnswer always sees the latest array
   const dataRef = useRef<Question[]>(data);
   const currentIndexRef = useRef<number>(currentIndex);
 
+  const marks = grade.filter((g) => g.is_correct).length;
+  
   useEffect(() => { dataRef.current = data; }, [data]);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
-
-  const marks = grade.filter((g) => g.is_correct).length;
 
   useEffect(() => {
     if (!authLoading && !isLoggedIn) {
       //router.push(`/login?redirect=/learn/${trackId}`)
       let name;
       if (trackId === 1) {
-        name = "py";
+        name = "python";
       } else if (trackId === 2) {
         name = "cpp";
       } else {
-        name = "js";
+        name = "javascript";
       }
       router.push(`/learn/${name}`);
     }
@@ -75,14 +77,41 @@ export function useMCQ(trackId: number) {
 
   useEffect(() => {
     if (!isLoggedIn) return;
+
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/profile?user_id=${user.user_id}&track_id=${trackId}`)
+      .then((res) => {
+        setSkillProfile(res.data);
+        })
+      .catch((error) => {
+        console.error("Error fetching skill profiles:", error);
+    });    
+  }, [trackId])
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    if (skillProfile?.skill_score === 0.3 && skillProfile?.skill_score === 0.3) {
+      setNewUser(true);
+    } else {
+      setNewUser(false);
+    }
+
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`)
+      .get(newUser ? `${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}` : `${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`)
       .then((res) => {
         setData(res.data);
         setLoading(false);
       })
-      .catch((err) => console.error("Error fetching questions:", err));
-  }, [isLoggedIn, trackId]);
+      .catch((err) => {
+        console.error("Error fetching questions:", err)
+        alert("AI tokens may be depleted or AI services may down. Falling back to pre-loaded questions.");
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`).then((res) => {
+          setData(res.data);
+          setLoading(false);
+        })
+    })
+      
+  }, [isLoggedIn, trackId, skillProfile]);
 
   const resetSession = useCallback((newQuestions: Question[]) => {
     setData(newQuestions);
@@ -117,16 +146,8 @@ export function useMCQ(trackId: number) {
       const isCorrect = submission.is_correct;
 
       setGrade((prev) => [...prev, { question_id: question.id, is_correct: isCorrect }]);
-
-      const highDiff = grabHighDiff(question, currentData);
-
-      if (isCorrect && highDiff.length > 0) {
-        setCurrentIndex(highDiff[0]);
-      } else if (highDiff.length > 0) {
-        setCurrentIndex((i) => i + 1);
-      } else {
-        setCompleted(true);
-      }
+      setCurrentIndex((i) => i + 1);
+      currentIndex === 9 && setCompleted(true)
 
       setProgress(((idx + 1) / currentData.length) * 100);
       setQuestionNumber((n) => n + 1);
@@ -134,15 +155,9 @@ export function useMCQ(trackId: number) {
       console.error("Error submitting answer:", err);
     }
   } else {
-      const highDiff = grabHighDiff(question, currentData);
-
-      if ( highDiff.length > 0) {
-        setCurrentIndex(highDiff[0]);
-      } else if (highDiff.length > 0) {
-        setCurrentIndex((i) => i + 1);
-      } else {
-        setCompleted(true);
-      }
+      setCurrentIndex((i) => i + 1);
+      console.log(currentIndex);
+      currentIndex === 14 && setCompleted(true)
 
       setProgress(((idx + 1) / currentData.length) * 100);
       setQuestionNumber((n) => n + 1);

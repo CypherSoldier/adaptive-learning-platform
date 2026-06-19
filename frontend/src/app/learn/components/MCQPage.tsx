@@ -31,12 +31,18 @@ export default function MCQ({ trackId }: { trackId: number }) {
       </main>
     );
   }
-  if (loading) return <Spinner />;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+      <p className="text-muted-foreground">Loading questions…</p>
+      <Spinner className="ml-4" />
+    </div>
+  );
 
   const handleNewSession = async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`);
       const questions = response.data;
+
 
       if (questions.length === 0) {
         alert('No questions available. Please try again later.');
@@ -49,11 +55,7 @@ export default function MCQ({ trackId }: { trackId: number }) {
 
       resetSession(selected); 
     } catch (error: any) {
-      if (error.response?.data?.detail === 'complete_seeded_session') {
-        alert('Login to complete your first session to unlock AI-generated questions and update your skill profile for AI-curated questions.');
-      } else {
         console.error('Failed to load new session:', error);
-      }
     }
   };
 
