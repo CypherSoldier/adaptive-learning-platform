@@ -15,6 +15,7 @@ def generate_mcq(topic: str, difficulty: int, count: int = 15) -> list[dict]:
 
     prompt = """
         Your task is to generate a coding question with multiple choice answers.
+        If difficulty level is a decimal and the decimal is .5, round up to the nearest whole number for the question generation. For example, if difficulty is 2.5, generate a level 3 question.
         The question should be appropriate for the specified difficulty level (1 - 5)
         Level 1: Focus on basic trivia, common beginner questions
         Level 2: Focus on basic syntax, simple operations, or common programming concepts.
