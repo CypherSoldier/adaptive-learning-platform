@@ -1,4 +1,5 @@
 import datetime
+import logging
 from ..schemas.user_skill_profile import UserSkillProfile
 from ..schemas.submission import SubmissionCreate, SubmissionOut
 
@@ -14,11 +15,11 @@ def update_skill_after_submission(
     skill_profile: UserSkillProfile, submission_out: SubmissionOut
 ) -> UserSkillProfile:
     if submission_out.is_correct:
-        skill_profile.skill_score = min(1.0, skill_profile.skill_score + 0.08)
-        skill_profile.confidence_score = min(1.0, skill_profile.confidence_score + 0.05)
+        skill_profile.skill_score = min(10.0, skill_profile.skill_score + 0.5)
+        skill_profile.confidence_score = min(10.0, skill_profile.confidence_score + 0.25)
     else:
-        skill_profile.skill_score = max(0.0, skill_profile.skill_score - 0.06)
-        skill_profile.confidence_score = max(0.0, skill_profile.confidence_score - 0.04)
+        skill_profile.skill_score = max(0.0, skill_profile.skill_score - 0.3)
+        skill_profile.confidence_score = max(0.0, skill_profile.confidence_score - 0.1)
 
     skill_profile.attempts += 1
 
