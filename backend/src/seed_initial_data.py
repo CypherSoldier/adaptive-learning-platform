@@ -8,13 +8,22 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.database.session import SessionLocal
 from src.models.learning_track import LearningTrack
 from src.models.question import Question
+# disable below for railway
+from pathlib import Path
 
 
-def seed_tracks():
+def seed_tracks(db: Session | None = None):
     """Seed learning tracks from sample_lt.json"""
-    db: Session = SessionLocal()
+    session_created = False
+    if db is None:
+        db = SessionLocal()
+        session_created = True
+    
     try:
-        json_path = "utils/sample_lt.json"
+        # remove line 19 and 22 for railway, make it 'json_path = "utils/sample_lt.json"'
+        BASE_DIR = Path(__file__).resolve().parent
+
+        json_path = BASE_DIR / "utils" / "sample_lt.json"
         with open(json_path, "r", encoding="utf-8") as f:
             tracks_data = json.load(f)
 
@@ -35,12 +44,17 @@ def seed_tracks():
         db.commit()
         print(f"✅ Seeded {seeded} new learning tracks")
     finally:
-        db.close()
+        if session_created:
+            db.close()
 
 
-def seed_questions():
+def seed_questions(db: Session | None = None):
     """Seed questions from all sample JSON files"""
-    db: Session = SessionLocal()
+    session_created = False
+    if db is None:
+        db = SessionLocal()
+        session_created = True
+    
     try:
         # Define your sample files
         sample_files = [
@@ -104,7 +118,8 @@ def seed_questions():
         db.rollback()
         raise
     finally:
-        db.close()
+        if session_created:
+            db.close()
 
 
 # Run both when script is executed directly
