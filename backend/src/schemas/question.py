@@ -10,6 +10,7 @@ class QuestionOut(BaseModel):
     difficulty: int
     track_id: int
     source: str
+    completed: bool
 
     class Config:
         orm_mode = True
