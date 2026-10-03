@@ -35,7 +35,8 @@ def generate_mcq(topic: str, difficulty: int, count: int = 15) -> list[dict]:
             "correct_answer": 3, // index of correct answer
             "explanation": // a short explanation of why it is correct
             "difficulty": 2, // level 3
-            "topic": "C++"
+            "topic": "C++",
+            "completed": false
         },
         Make sure the options are plausible but with only one clearly correct answer.
         Use the following format for code questions:

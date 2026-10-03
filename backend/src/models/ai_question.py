@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, JSON
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, JSON
 from src.database.session import Base
 
 
@@ -12,3 +12,4 @@ class AIQuestion(Base):
     difficulty = Column(Integer)
     track_id = Column(Integer, ForeignKey("learning_tracks.id"))
     source = Column(String)
+    completed = Column(Boolean, default=False)

@@ -56,6 +56,7 @@ def generate_and_store_questions(
             explanation=q["explanation"],
             difficulty=q["difficulty"],
             source="ai_generated",
+            completed=q.get("completed", False),
         )
         db.add(record)
         ai_questions.append(record)
