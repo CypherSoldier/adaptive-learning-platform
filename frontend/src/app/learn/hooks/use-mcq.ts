@@ -26,8 +26,7 @@ export function useMCQ(trackId: number) {
   const [grade, setGrade] = useState<GradeEntry[]>([]);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [newUser, setNewUser] = useState(false);
-  const [skillProfile, setSkillProfile] = useState<SkillProfile | null>(null);
+  const initialAiRequestRef = useRef({ scope: "", requestId: "" });
 
   // Ref mirrors data so submitAnswer always sees the latest array
   const dataRef = useRef<Question[]>(data);
@@ -53,9 +52,9 @@ export function useMCQ(trackId: number) {
     }
   }, [authLoading, isLoggedIn, router, trackId]);
 
-  // load sample question for a user not logged in
+  // Guests use the bundled preview questions.
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!authLoading && !isLoggedIn) {
       import("./sample.json")
         .then((module) => {
           const data = module.default;
@@ -73,45 +72,56 @@ export function useMCQ(trackId: number) {
         })
         .catch((error) => console.error("Error loading sample JSON", error));
     }
-  }, [isLoggedIn, trackId]);
+  }, [authLoading, isLoggedIn, trackId]);
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (authLoading || !isLoggedIn || !user?.user_id) return;
+    let active = true;
 
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/profile?user_id=${user.user_id}&track_id=${trackId}`)
-      .then((res) => {
-        setSkillProfile(res.data);
-        })
-      .catch((error) => {
-        console.error("Error fetching skill profiles:", error);
-    });    
-  }, [trackId])
+    const loadQuestions = async () => {
+      try {
+        const profileResponse = await axios.get<SkillProfile>(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/profile?user_id=${user.user_id}&track_id=${trackId}`
+        );
+        if (!active) return;
 
-  useEffect(() => {
-    if (!isLoggedIn) return;
+        let questions: Question[];
+        if (profileResponse.data.attempts < 10) {
+          const sampleSource = trackId === 1
+            ? "sample_py.json"
+            : trackId === 2
+              ? "sample_cpp.json"
+              : "sample_js.json";
+          const questionsResponse = await axios.get<Question[]>(
+            `${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`,
+            { params: { source: sampleSource } }
+          );
+          questions = questionsResponse.data;
+        } else {
+          const scope = `${user.user_id}:${trackId}`;
+          if (initialAiRequestRef.current.scope !== scope) {
+            initialAiRequestRef.current = { scope, requestId: crypto.randomUUID() };
+          }
+          const questionsResponse = await axios.post<Question[]>(
+            `${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`,
+            {},
+            { headers: { "Idempotency-Key": initialAiRequestRef.current.requestId } }
+          );
+          questions = questionsResponse.data;
+        }
 
-    if (skillProfile?.skill_score === 0.3 && skillProfile?.skill_score === 0.3) {
-      setNewUser(true);
-    } else {
-      setNewUser(false);
-    }
-
-    axios
-      .get(newUser ? `${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}` : `${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`)
-      .then((res) => {
-        setData(res.data);
+        if (!active) return;
+        setData(questions);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching questions:", err)
-        alert("AI tokens may be depleted or AI services may down. Falling back to pre-loaded questions.");
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`).then((res) => {
-          setData(res.data);
-          setLoading(false);
-        })
-    })
-      
-  }, [isLoggedIn, trackId, skillProfile]);
+      } catch (err) {
+        console.error("Error loading questions:", err);
+        if (active) setLoading(false);
+      }
+    };
+
+    void loadQuestions();
+    return () => { active = false; };
+  }, [authLoading, isLoggedIn, trackId, user?.user_id]);
 
   const resetSession = useCallback((newQuestions: Question[]) => {
     setData(newQuestions);
