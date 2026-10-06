@@ -40,7 +40,11 @@ export default function MCQ({ trackId }: { trackId: number }) {
 
   const handleNewSession = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`,
+        {},
+        { headers: { "Idempotency-Key": crypto.randomUUID() } }
+      );
       const questions = response.data;
 
 
@@ -51,7 +55,7 @@ export default function MCQ({ trackId }: { trackId: number }) {
 
       const selected = questions
         .sort(() => 0.5 - Math.random())
-        .slice(0, 15);
+        .slice(0, 10);
 
       resetSession(selected); 
     } catch (error: any) {
