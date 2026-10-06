@@ -6,7 +6,8 @@
     "correct_answer": 1,
     "explanation": "In Python, functions are defined using the 'def' keyword followed by the function name and parentheses.",
     "difficulty": 1,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 2,
@@ -15,7 +16,8 @@
     "correct_answer": 2,
     "explanation": "Python variable names can contain letters, numbers, and underscores, but cannot start with a number or contain spaces or hyphens.",
     "difficulty": 1,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 3,
@@ -24,7 +26,8 @@
     "correct_answer": 0,
     "explanation": "Python source files use the .py extension.",
     "difficulty": 1,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 4,
@@ -33,7 +36,8 @@
     "correct_answer": 0,
     "explanation": "Multiplying a string by an integer repeats the string that many times.",
     "difficulty": 2,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 5,
@@ -42,7 +46,8 @@
     "correct_answer": 1,
     "explanation": "The += operator adds the value on the right to the variable. So 5 + 3 = 8.",
     "difficulty": 2,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 6,
@@ -51,7 +56,8 @@
     "correct_answer": 1,
     "explanation": "The append() method adds a new element to the end of the list, increasing its length from 3 to 4.",
     "difficulty": 2,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 7,
@@ -60,7 +66,8 @@
     "correct_answer": 1,
     "explanation": "Both x and y reference the same list object. Modifying y also modifies x.",
     "difficulty": 3,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 8,
@@ -69,7 +76,8 @@
     "correct_answer": 0,
     "explanation": "This is a dictionary comprehension that maps each number to its square for values 0 through 2.",
     "difficulty": 3,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 9,
@@ -78,7 +86,8 @@
     "correct_answer": 1,
     "explanation": "a=1, b takes default value 2, and c is overridden to 4. So 1 + 2 + 4 = 7.",
     "difficulty": 3,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 10,
@@ -87,7 +96,8 @@
     "correct_answer": 1,
     "explanation": "The coroutine prints 'A', then yields control with await, and then resumes to print 'B'.",
     "difficulty": 4,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 11,
@@ -101,7 +111,8 @@
     "correct_answer": 1,
     "explanation": "The GIL ensures that only one thread executes Python bytecode at a time, simplifying memory management in CPython.",
     "difficulty": 4,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 12,
@@ -110,7 +121,8 @@
     "correct_answer": 2,
     "explanation": "Due to race conditions, the counter increment is not atomic and may result in a value less than 2000.",
     "difficulty": 4,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 13,
@@ -119,7 +131,8 @@
     "correct_answer": 1,
     "explanation": "Class B calls the parent constructor using super(), which sets value to 5, then adds 5 more, resulting in 10.",
     "difficulty": 5,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 14,
@@ -128,7 +141,8 @@
     "correct_answer": 1,
     "explanation": "Default mutable arguments persist between function calls, so the list keeps growing.",
     "difficulty": 5,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   },
   {
     "id": 15,
@@ -137,6 +151,7 @@
     "correct_answer": 2,
     "explanation": "The metaclass modifies the class dictionary during creation and injects attribute 'x' with value 42.",
     "difficulty": 5,
-    "topic": "Python"
+    "topic": "Python",
+    "completed": false
   }
 ]

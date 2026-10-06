@@ -6,7 +6,8 @@
     "correct_answer": 2,
     "explanation": "'const' declares a variable that cannot be reassigned after its initial assignment. Note that for objects and arrays declared with const, the contents can still be mutated — only the binding itself is immutable.",
     "difficulty": 1,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 2,
@@ -20,7 +21,8 @@
     "correct_answer": 1,
     "explanation": "DOM stands for Document Object Model. It is a programming interface for web documents that represents the page as a tree of nodes, allowing JavaScript to dynamically access and manipulate the content, structure, and styles of a webpage.",
     "difficulty": 1,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 3,
@@ -34,7 +36,8 @@
     "correct_answer": 2,
     "explanation": "In JavaScript, single-line comments begin with '//'. Multi-line comments use '/* */'. The '<!--' syntax is for HTML, and '#' is used in languages like Python and Bash.",
     "difficulty": 1,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 4,
@@ -43,7 +46,8 @@
     "correct_answer": 2,
     "explanation": "This is a well-known JavaScript quirk. 'typeof null' returns 'object', which is considered a bug in the language dating back to its original implementation. null is not actually an object, but this behavior has been kept for backwards compatibility.",
     "difficulty": 2,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 5,
@@ -52,7 +56,8 @@
     "correct_answer": 1,
     "explanation": "Due to floating-point precision issues in IEEE 754 arithmetic (used by JavaScript), 0.1 + 0.2 evaluates to 0.30000000000000004, not exactly 0.3. Therefore the strict equality check returns false.",
     "difficulty": 2,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 6,
@@ -61,7 +66,8 @@
     "correct_answer": 1,
     "explanation": "Even though 'arr' is declared with 'const', the array contents can still be mutated. push(4) adds an element, making the array [1, 2, 3, 4] with a length of 4. 'const' only prevents reassignment of the variable binding, not mutation of the object it points to.",
     "difficulty": 2,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 7,
@@ -75,7 +81,8 @@
     "correct_answer": 1,
     "explanation": "[] + [] coerces both arrays to empty strings, giving \"\". [] + {} coerces [] to \"\" and {} to \"[object Object]\", giving \"[object Object]\". In the third case, when {} appears at the start of a statement it is parsed as an empty block (not an object), making it equivalent to +[], which coerces [] to 0. However in console.log({} + []), the {} is inside an expression context and becomes \"[object Object]\" + \"\" = \"[object Object]\".",
     "difficulty": 3,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 8,
@@ -84,7 +91,8 @@
     "correct_answer": 2,
     "explanation": "Because 'var' is function-scoped (not block-scoped), all three closures share the same 'i' variable. By the time the setTimeout callbacks execute (after the loop finishes), i has been incremented to 3. Using 'let' instead of 'var' would capture a new binding per iteration and print 0 1 2.",
     "difficulty": 3,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 9,
@@ -93,7 +101,8 @@
     "correct_answer": 1,
     "explanation": "Object.assign performs a shallow copy. Since 'a' is a primitive value, it is copied by value into 'clone'. Modifying clone.a does not affect obj.a. Had 'a' been a nested object, changes to its properties would have reflected in both, since only the reference would have been copied.",
     "difficulty": 3,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 10,
@@ -107,7 +116,8 @@
     "correct_answer": 1,
     "explanation": "An async function always returns a Promise, even when it returns a plain value. The returned value (42) becomes the resolved value of the Promise. So 'result instanceof Promise' is true, and logging 'result' shows Promise { 42 } (fulfilled with 42). To get 42 directly, you must await it.",
     "difficulty": 4,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 11,
@@ -121,7 +131,8 @@
     "correct_answer": 2,
     "explanation": "The first .then throws an error, which skips the second .then and is caught by .catch. Since .catch also returns a resolved promise (it handled the error), the final .then executes and logs 'final'. This demonstrates that .catch in a promise chain acts like a recovery step and the chain continues afterward.",
     "difficulty": 4,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 12,
@@ -135,7 +146,8 @@
     "correct_answer": 1,
     "explanation": "After each macrotask (e.g., a setTimeout callback) completes, the JavaScript engine processes the entire microtask queue (Promise callbacks, queueMicrotask) before picking up the next macrotask. This means Promise .then callbacks will always run before the next setTimeout, even if both are already queued.",
     "difficulty": 4,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 13,
@@ -144,7 +156,8 @@
     "correct_answer": 2,
     "explanation": "The spread operator uses the iterator protocol and stops when 'done: true' is returned. A 'return' statement in a generator sets done to true and the returned value is NOT included in spread or for...of results. 'yield 4' is unreachable. So only the yielded values 1 and 2 are collected.",
     "difficulty": 5,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 14,
@@ -153,7 +166,8 @@
     "correct_answer": 2,
     "explanation": "A Proxy intercepts property access via the 'get' trap. When p.a is accessed, 'a' exists in the target object (it was set to 1), so it returns 1. When p.b is accessed, 'b' does not exist in the target, so the trap returns the fallback value 37.",
     "difficulty": 5,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   },
   {
     "id": 15,
@@ -162,6 +176,7 @@
     "correct_answer": 2,
     "explanation": "Private class fields (#x) are scoped to the class body in which they are declared — they are not inherited or shared. A's #x and B's #x are entirely separate fields on the same object instance. getX() in class A accesses A's private #x (10), and getY() in class B accesses B's own private #x (20). Both coexist independently.",
     "difficulty": 5,
-    "topic": "JavaScript"
+    "topic": "JavaScript",
+    "completed": false
   }
 ]
