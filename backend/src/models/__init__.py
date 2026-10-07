@@ -4,6 +4,7 @@ from src.models.question import Question
 from src.models.topic import Topic
 from src.models.submission import Submission
 from src.models.user_skill_profile import UserSkillProfile
+from src.models.ai_generation_request import AIGenerationRequest
 
 __all__ = [
     "User",
@@ -12,4 +13,5 @@ __all__ = [
     "Topic",
     "Submission",
     "UserSkillProfile",
+    "AIGenerationRequest",
 ]
