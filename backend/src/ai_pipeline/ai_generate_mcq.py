@@ -9,7 +9,7 @@ from fastapi import HTTPException
 load_dotenv()
 
 
-def generate_mcq(topic: str, difficulty: int, count: int = 15) -> list[dict]:
+def generate_mcq(topic: str, difficulty: int, count: int = 10) -> list[dict]:
 
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -42,7 +42,7 @@ def generate_mcq(topic: str, difficulty: int, count: int = 15) -> list[dict]:
         Use the following format for code questions:
         "What is the output of the following C++ code?\n\ncpp\nint arr[] = {10, 20, 30};\nint* p = arr;\nstd::cout << *(p + 2);\n"
         You can see we have included ``` from markdown just before the language (cpp), and after \n at the end, this is for rendering purposes on the frontend.
-        Generate 10 questions on the topic using difficulty level.
+        Generate exactly COUNT_PLACEHOLDER questions on the topic using the requested difficulty level.
         Return as a JSON
     """
 
@@ -51,7 +51,7 @@ def generate_mcq(topic: str, difficulty: int, count: int = 15) -> list[dict]:
     
         response = client.models.generate_content(
             model='gemini-2.5-flash',
-            contents=prompt,
+            contents=prompt.replace("COUNT_PLACEHOLDER", str(count)),
             config=types.GenerateContentConfig(
                 system_instruction=f"You are an MCQ question generator. The questions should prepare a user for an interview. Topic: {topic}. Difficulty {difficulty}.",
                 temperature=0.2,
