@@ -18,7 +18,8 @@ def submit(
         raise HTTPException(status_code=404, detail="Question not found")
 
     is_correct = question.correct_answer == submission_data.answer
-    completed = True
+
+    question.completed = True
 
     submission = Submission(
         user_id=user_id,
@@ -26,7 +27,6 @@ def submit(
         answer=submission_data.answer,
         is_correct=is_correct,
         track_id=submission_data.track_id,
-        completed=completed
     )
     db.add(submission)
     db.commit()
