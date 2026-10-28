@@ -4,3 +4,10 @@
 .env*
 
 # other files
+src/__pycache__
+src/ai_pipeline/__pycache__
+src/api/routes/__pycache__
+src/services/__pycache__
+database.db
+src/__pycache__
+tests/e2e/__pycache__
