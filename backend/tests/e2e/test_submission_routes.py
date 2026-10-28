@@ -9,13 +9,22 @@ def test_root(client):
 
 
 def test_create_submission(client, auth_headers):
+    session_response = client.post(
+        "/sessions/1",
+        headers={**auth_headers, "Idempotency-Key": "submission-route-test"},
+    )
+    assert session_response.status_code == 200
+    session = session_response.json()
+    question = session["questions"][0]
+
     response = client.post(
         "/submissions",
         headers=auth_headers,
         json={
-            "question_id": 1,
-            "answer": 2,
-            "track_id": 1
+            "question_id": question["id"],
+            "answer": question["correct_answer"],
+            "track_id": 1,
+            "session_id": session["session_id"],
         }
     )
 

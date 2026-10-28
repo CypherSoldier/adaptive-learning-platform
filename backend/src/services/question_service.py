@@ -6,6 +6,7 @@ from src.models.learning_track import LearningTrack
 from fastapi import HTTPException, Depends
 from src.database.session import get_db
 from src.services.auth_service import get_current_user
+from src.services.skill_profile_service import get_or_create_skill_profile
 
 MIN_QUESTIONS = 15
 DIFFICULTY_MAX = 5
@@ -51,25 +52,9 @@ def get_skill_profile(user_profile: UserSkillProfile = Depends()):
 
 
 def get_user_skill_profile(user_id: int, track_id: int, db: Session):
-    profile = (
-        db.query(UserSkillProfile)
-        .filter(
-            UserSkillProfile.user_id == user_id, UserSkillProfile.track_id == track_id
-        )
-        .first()
-    )
-
-    if not profile:
-        profile = UserSkillProfile(
-            user_id=user_id,
-            track_id=track_id,
-            skill_score=0.3,
-            confidence_score=0.3,
-            attempts=0,
-        )
-        db.add(profile)
-        db.commit()
-        db.refresh(profile)
+    profile = get_or_create_skill_profile(db, user_id, track_id)
+    db.commit()
+    db.refresh(profile)
     return profile
 
 
