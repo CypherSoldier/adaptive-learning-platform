@@ -26,6 +26,6 @@ async def login_for_access_token(
     return auth_service.login_for_access_token(form_data, db)
 
 
-@router.post("/google", response_model=auth.Token)
+@router.post("/google", response_model=auth.GoogleAuthToken)
 async def login_with_google(token: auth.GoogleToken, db: DbSession):
     return auth_service.login_with_google(token, db)

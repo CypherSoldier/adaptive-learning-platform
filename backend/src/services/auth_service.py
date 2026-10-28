@@ -10,7 +10,6 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from src.models.user import User
 from ..schemas import auth
-from ..schemas import user as user_schema
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from ..exceptions import AuthenticationError
 import logging
@@ -126,7 +125,7 @@ def verify_firebase_id_token(id_token: str) -> dict:
         raise AuthenticationError("Invalid Firebase ID token")
 
 
-def login_with_google(token: auth.GoogleToken, db: Session) -> auth.Token:
+def login_with_google(token: auth.GoogleToken, db: Session) -> auth.GoogleAuthToken:
     """
     Accepts a Firebase ID token from the client (firebaseUser.getIdToken()), verifies it, then finds or creates the user and returns a signed app JWT.
 
@@ -152,13 +151,12 @@ def login_with_google(token: auth.GoogleToken, db: Session) -> auth.Token:
         db.refresh(user)
 
     access_token = create_access_token(user.email, user.user_id, timedelta(minutes=60))
-    return auth.Token(
+    return auth.GoogleAuthToken(
         access_token=access_token,
         token_type="bearer",
-        user=user_schema.UserResponse(
+        user=auth.AuthenticatedUser(
             user_id=user.user_id,
             email=user.email,
             full_name=user.full_name,
-            password_hash=user.password_hash,
         ),
     )

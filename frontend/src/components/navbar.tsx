@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { Brain, User, LogOut } from "lucide-react"
-import { auth } from '../lib/firebase';
 import { AvatarDemo } from "./avatar_profile";
 import { Button } from "@/components/ui/button"
 import {
@@ -14,12 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import AuthContext from "@/app/context/AuthContext"
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useContext } from "react";
 
 export function Navbar() {
   const { user, logout, isLoggedIn, authLoading } = useContext(AuthContext);
-  const [g_user] = useAuthState(auth);
 
   const handleLogout = async () => {
     try {
@@ -71,7 +68,7 @@ export function Navbar() {
                   className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                   aria-label="User menu"
                 >
-                  <AvatarDemo user={g_user} />
+                  <AvatarDemo user={user} />
                   <User className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>

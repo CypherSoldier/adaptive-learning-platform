@@ -13,6 +13,16 @@ class Token(BaseModel):
     token_type: str
 
 
+class AuthenticatedUser(BaseModel):
+    user_id: int
+    email: EmailStr
+    full_name: str | None = None
+
+
+class GoogleAuthToken(Token):
+    user: AuthenticatedUser
+
+
 class GoogleToken(BaseModel):
     token: str
 

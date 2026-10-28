@@ -64,13 +64,16 @@ export const AuthProvider = ({ children }) => {
  
             try {
                 const response = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`);
+                const resolvedResponse = await response;
                 if (!cancelled) {
-                    const u = response.data;
+                    const u = resolvedResponse.data;
                     applySession(token, {
                         user_id: String(u.user_id ?? u.id),
                         uid: String(u.firebase_uid ?? u.user_id ?? u.id),
                         email: u.email,
                         full_name: u.full_name,
+                        photo_url: auth.currentUser?.email?.toLowerCase() === u.email?.toLowerCase()
+                            ? auth.currentUser.photoURL : null,
                     });
                 }
             } catch {
@@ -120,6 +123,7 @@ export const AuthProvider = ({ children }) => {
                 uid: firebaseUser.uid,
                 email: firebaseUser.email,
                 full_name: firebaseUser.displayName,
+                photo_url: firebaseUser.photoURL,
             });
     
             router.push("/");
@@ -150,6 +154,7 @@ export const AuthProvider = ({ children }) => {
                 uid: payload?.id ?? null,      
                 email: payload?.sub ?? email,
                 full_name: null,               
+                photo_url: null,
                 });
  
             // Fetch full profile in the background
