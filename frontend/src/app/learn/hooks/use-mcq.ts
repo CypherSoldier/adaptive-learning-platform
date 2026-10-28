@@ -2,191 +2,180 @@ import { useEffect, useState, useContext, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import AuthContext from "@/app/context/AuthContext";
-import { Question, GradeEntry, SkillProfile } from "../lib/types";
-
-function grabHighDiff(question: Question, data: Question[]) {
-    let highDiff = [];
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].difficulty > question.difficulty) {
-            highDiff.push(i);
-        }
-    }
-    return highDiff;
-}
+import { Question, GradeEntry, SessionResponse } from "../lib/types";
 
 export function useMCQ(trackId: number) {
   const { isLoggedIn, authLoading, user } = useContext(AuthContext);
   const router = useRouter();
-
   const [data, setData] = useState<Question[]>([]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionType, setSessionType] = useState<"onboarding" | "ai" | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answer, setAnswer] = useState(0);
+  const [answer, setAnswer] = useState(-1);
   const [completed, setCompleted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [grade, setGrade] = useState<GradeEntry[]>([]);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [loading, setLoading] = useState(true);
-  const initialAiRequestRef = useRef({ scope: "", requestId: "" });
-
-  // Ref mirrors data so submitAnswer always sees the latest array
+  const [error, setError] = useState<string | null>(null);
   const dataRef = useRef<Question[]>(data);
-  const currentIndexRef = useRef<number>(currentIndex);
+  const currentIndexRef = useRef(currentIndex);
+  const marks = grade.filter((entry) => entry.is_correct).length;
 
-  const marks = grade.filter((g) => g.is_correct).length;
-  
   useEffect(() => { dataRef.current = data; }, [data]);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
 
   useEffect(() => {
     if (!authLoading && !isLoggedIn) {
-      //router.push(`/login?redirect=/learn/${trackId}`)
-      let name;
-      if (trackId === 1) {
-        name = "python";
-      } else if (trackId === 2) {
-        name = "cpp";
-      } else {
-        name = "javascript";
-      }
+      const name = trackId === 1 ? "python" : trackId === 2 ? "cpp" : "javascript";
       router.push(`/learn/${name}`);
     }
   }, [authLoading, isLoggedIn, router, trackId]);
 
-  // Guests use the bundled preview questions.
-  useEffect(() => {
-    if (!authLoading && !isLoggedIn) {
-      import("./sample.json")
-        .then((module) => {
-          const data = module.default;
-          let filtered_data;
-          if (trackId === 1) {
-            filtered_data = data.filter((q) => q.topic === "Python");
-          } else if (trackId === 2) {
-            filtered_data = data.filter((q) => q.topic === "C++");
-          } else {
-            filtered_data = data.filter((q) => q.topic === "JavaScript");
-          }
+  const loadServerSession = useCallback(async (key: string) => {
+    const response = await axios.post<SessionResponse>(
+      `${process.env.NEXT_PUBLIC_API_URL}/sessions/${trackId}`,
+      {}, { headers: { "Idempotency-Key": key } },
+    );
+    return response.data;
+  }, [trackId]);
 
-          setData(filtered_data);
-          setLoading(false);
-        })
-        .catch((error) => console.error("Error loading sample JSON", error));
-    }
-  }, [authLoading, isLoggedIn, trackId]);
-
-  useEffect(() => {
-    if (authLoading || !isLoggedIn || !user?.user_id) return;
-    let active = true;
-
-    const loadQuestions = async () => {
-      try {
-        const profileResponse = await axios.get<SkillProfile>(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/profile?user_id=${user.user_id}&track_id=${trackId}`
-        );
-        if (!active) return;
-
-        let questions: Question[];
-        if (profileResponse.data.attempts < 10) {
-          const sampleSource = trackId === 1
-            ? "sample_py.json"
-            : trackId === 2
-              ? "sample_cpp.json"
-              : "sample_js.json";
-          const questionsResponse = await axios.get<Question[]>(
-            `${process.env.NEXT_PUBLIC_API_URL}/questions/${trackId}`,
-            { params: { source: sampleSource } }
-          );
-          questions = questionsResponse.data;
-        } else {
-          const scope = `${user.user_id}:${trackId}`;
-          if (initialAiRequestRef.current.scope !== scope) {
-            initialAiRequestRef.current = { scope, requestId: crypto.randomUUID() };
-          }
-          const questionsResponse = await axios.post<Question[]>(
-            `${process.env.NEXT_PUBLIC_API_URL}/ai_questions/${trackId}`,
-            {},
-            { headers: { "Idempotency-Key": initialAiRequestRef.current.requestId } }
-          );
-          questions = questionsResponse.data;
-        }
-
-        if (!active) return;
-        setData(questions);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error loading questions:", err);
-        if (active) setLoading(false);
-      }
-    };
-
-    void loadQuestions();
-    return () => { active = false; };
-  }, [authLoading, isLoggedIn, trackId, user?.user_id]);
-
-  const resetSession = useCallback((newQuestions: Question[]) => {
-    setData(newQuestions);
-    setCurrentIndex(0);
-    setCompleted(false);
-    setProgress(0);
+  const applySession = useCallback((session: SessionResponse) => {
+    const cursorKey = `learning-session-index:${session.session_id}`;
+    const savedIndex = Number(sessionStorage.getItem(cursorKey) || 0);
+    const index = Number.isInteger(savedIndex)
+      ? Math.max(0, Math.min(savedIndex, session.questions.length))
+      : 0;
+    setData(session.questions);
+    setSessionId(session.session_id);
+    setSessionType(session.session_type);
+    setCurrentIndex(index);
+    setCompleted(session.questions.length > 0 && index >= session.questions.length);
+    setProgress(session.questions.length ? (index / session.questions.length) * 100 : 0);
+    setQuestionNumber(index + 1);
+    setAnswer(-1);
     setGrade([]);
-    setAnswer(0);
-    setQuestionNumber(1);
-    // Keep the refs in sync immediately so the very first submitAnswer
-    // after a reset reads the new data, not the old
-    dataRef.current = newQuestions;
-    currentIndexRef.current = 0;
-  }, []);
+    dataRef.current = session.questions;
+    currentIndexRef.current = index;
+    if (session.questions.length > 0 && index >= session.questions.length && user?.user_id) {
+      sessionStorage.removeItem(`learning-session-key:v2:${user.user_id}:${trackId}`);
+    }
+  }, [trackId, user?.user_id]);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!isLoggedIn) {
+      import("./sample.json").then((module) => {
+        const trackName = trackId === 1 ? "Python" : trackId === 2 ? "C++" : "JavaScript";
+        const preview = module.default.filter((q) => q.topic === trackName) as Question[];
+        setData(preview);
+        setLoading(false);
+      }).catch(() => {
+        setError("Could not load the question preview.");
+        setLoading(false);
+      });
+      return;
+    }
+    if (!user?.user_id) return;
+    let active = true;
+    setLoading(true);
+    setError(null);
+    const scope = `${user.user_id}:${trackId}`;
+    const storageKey = `learning-session-key:v2:${scope}`;
+    let key = sessionStorage.getItem(storageKey);
+    if (!key) {
+      key = crypto.randomUUID();
+      sessionStorage.setItem(storageKey, key);
+    }
+    loadServerSession(key).then((session) => {
+      if (!active) return;
+      applySession(session);
+      setLoading(false);
+      if (!session.questions.length) setError("There are no questions available for this session.");
+    }).catch(async (err) => {
+      if (!active) return;
+      console.error("Error loading session:", err);
+      const detail = err?.response?.data?.detail;
+      const staleKey = err?.response?.status === 409 &&
+        (String(detail).includes("Idempotency key was already used") || String(detail).includes("Session changed concurrently"));
+      if (staleKey) {
+        const replacementKey = crypto.randomUUID();
+        sessionStorage.setItem(storageKey, replacementKey);
+        try {
+          const session = await loadServerSession(replacementKey);
+          if (!active) return;
+          applySession(session);
+          setLoading(false);
+          return;
+        } catch (retryError) {
+          console.error("Retrying with a fresh session key failed:", retryError);
+        }
+      }
+      setError(detail || "Could not load a session. Please try again.");
+      setLoading(false);
+    });
+    return () => { active = false; };
+  }, [authLoading, isLoggedIn, trackId, user?.user_id, loadServerSession, applySession]);
+
+  const startNewSession = useCallback(async () => {
+    if (!user?.user_id) return;
+    setLoading(true);
+    setError(null);
+    const scope = `${user.user_id}:${trackId}`;
+    const storageKey = `learning-session-key:v2:${scope}`;
+    const key = crypto.randomUUID();
+    sessionStorage.setItem(storageKey, key);
+    try {
+      const session = await loadServerSession(key);
+      applySession(session);
+      setError(null);
+    } catch (err: any) {
+      console.error("Failed to load new session:", err);
+      setError(err?.response?.data?.detail || "Could not start a new session. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, [applySession, loadServerSession, trackId, user?.user_id]);
 
   const submitAnswer = async () => {
-    // Read from refs — always current, never stale
     const currentData = dataRef.current;
     const idx = currentIndexRef.current;
     const question = currentData[idx];
-
     if (!question) return;
-
     if (isLoggedIn) {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/submissions`, {
-        question_id: question.id,
-        answer,
-        track_id: trackId,
-      });
-      const { submission } = response.data;
-      const isCorrect = submission.is_correct;
-
-      setGrade((prev) => [...prev, { question_id: question.id, is_correct: isCorrect }]);
-      setCurrentIndex((i) => i + 1);
-      currentIndex === 9 && setCompleted(true)
-
-      setProgress(((idx + 1) / currentData.length) * 100);
-      setQuestionNumber((n) => n + 1);
-    } catch (err) {
-      console.error("Error submitting answer:", err);
+      if (!sessionId) return;
+      try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/submissions`, {
+          question_id: question.id, answer, track_id: trackId, session_id: sessionId,
+        });
+        const isCorrect = response.data.submission.is_correct;
+        setGrade((prev) => [...prev, { question_id: question.id, is_correct: isCorrect }]);
+      } catch (err: any) {
+        console.error("Error submitting answer:", err);
+        setError(err?.response?.data?.detail || "Could not submit your answer. Please try again.");
+        return;
+      }
+    } else {
+      setGrade((prev) => [...prev, { question_id: question.id, is_correct: false }]);
     }
-  } else {
-      setCurrentIndex((i) => i + 1);
-      console.log(currentIndex);
-      currentIndex === 14 && setCompleted(true)
-
-      setProgress(((idx + 1) / currentData.length) * 100);
-      setQuestionNumber((n) => n + 1);
-  }
+    const nextIndex = idx + 1;
+    setCurrentIndex(nextIndex);
+    currentIndexRef.current = nextIndex;
+    setProgress((nextIndex / currentData.length) * 100);
+    setQuestionNumber((n) => n + 1);
+    setAnswer(-1);
+    if (sessionId) {
+      sessionStorage.setItem(`learning-session-index:${sessionId}`, String(nextIndex));
+    }
+    if (nextIndex >= currentData.length) {
+      setCompleted(true);
+      if (isLoggedIn && user?.user_id) {
+        sessionStorage.removeItem(`learning-session-key:v2:${user.user_id}:${trackId}`);
+      }
+    }
   };
 
-  return {
-    authLoading,
-    isLoggedIn,
-    questionNumber,
-    answer,
-    setAnswer,
-    completed,
-    progress,
-    marks,
-    submitAnswer,
-    resetSession, 
-    data,
-    currentIndex,
-    loading,
-  };
+  return { authLoading, isLoggedIn, questionNumber, answer, setAnswer, completed,
+    progress, marks, submitAnswer, startNewSession, data, currentIndex, loading,
+    error, sessionType };
 }

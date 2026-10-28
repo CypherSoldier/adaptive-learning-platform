@@ -3,21 +3,22 @@ export interface Question {
   question: string;
   options: string[];
   correct_answer: number;
-  completed: boolean;
   difficulty: number;
-  topic: string;
+  track_id?: number;
+  source?: string;
+  explanation?: string;
+  topic?: string;
 }
 
-export interface GradeEntry {
-  question_id: number;
-  is_correct: boolean;
-}
-
-export interface SkillProfile {
+export interface SessionResponse {
+  session_id: string;
+  session_type: "onboarding" | "ai";
   track_id: number;
-  skill_score: number;
-  user_id: number;
-  attempts: number;
-  id: number;
-  confidence_score: number;
+  questions: Question[];
+}
+
+export interface GradeEntry { question_id: number; is_correct: boolean; }
+export interface SkillProfile {
+  track_id: number; skill_score: number; user_id: number; attempts: number;
+  id: number; confidence_score: number;
 }

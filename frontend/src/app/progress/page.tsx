@@ -5,7 +5,6 @@ import { Footer } from "@/components/footer"
 import { TrackProgressCard } from "@/components/track-progress-card"
 import { useEffect, useState, useContext } from "react";
 import axios from 'axios';
-import { auth } from '@/lib/firebase';
 import AuthContext from "@/app/context/AuthContext"
 import { useRouter } from "next/navigation";
 
@@ -38,18 +37,22 @@ export default function ProgressPage() {
   }, [authLoading, isLoggedIn, router]);
  
   useEffect(() => {
-    if (!user?.uid) return; 
+    if (authLoading || !isLoggedIn || !user?.user_id) return;
+    let active = true;
+    setProgress([]);
+    setFetchError(null);
  
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/users/skill-profiles?user_id=${user.id}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/users/skill-profiles`)
       .then((response) => {
-        setProgress(response.data);
+        if (active) setProgress(response.data);
       })
       .catch((error) => {
         console.error("Error fetching skill profiles:", error);
-        setFetchError("Failed to load your progress. Please try again.");
+        if (active) setFetchError("Failed to load your progress. Please try again.");
       });
-  }, [user?.uid]); 
+    return () => { active = false; };
+  }, [authLoading, isLoggedIn, user?.user_id]);
  
   if (authLoading) {
     return (
@@ -84,8 +87,8 @@ export default function ProgressPage() {
                   title={profile.track_type}
                   skillScore={Math.round(profile.skill_score * 100) / 100}
                   confidenceScore={Math.round(profile.confidence_score * 100) / 100}
-                  accentColor={colours[i].accentColor}
-                  iconBg={colours[i].iconBg}
+                  accentColor={colours[i % colours.length].accentColor}
+                  iconBg={colours[i % colours.length].iconBg}
                 />
               ))
             ) : (
