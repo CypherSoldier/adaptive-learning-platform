@@ -61,7 +61,7 @@ export default function MCQ({ trackId }: { trackId: number }) {
               <CardTitle className="text-3xl">Session Complete!</CardTitle>
               <CardDescription className="text-lg mt-2">You got {marks} correct answers.</CardDescription>
             </CardHeader>
-            <CardContent className="pt-4 pb-8"><p className="text-muted-foreground">Your progress has been saved.</p></CardContent>
+            <CardContent className="pt-4 pb-8"><p className="text-muted-foreground">{isLoggedIn ? "Your progress has been saved." : "This preview session is not saved."}</p></CardContent>
             <CardFooter className="flex flex-col sm:flex-row justify-center gap-4">
               <Button variant="default" size="lg" onClick={startNewSession}>Start New Session</Button>
               <Button variant="outline" size="lg" onClick={() => router.push("/progress")}>View Progress</Button>

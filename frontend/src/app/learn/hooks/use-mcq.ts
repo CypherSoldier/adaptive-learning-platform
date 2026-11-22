@@ -1,12 +1,10 @@
 import { useEffect, useState, useContext, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import AuthContext from "@/app/context/AuthContext";
 import { Question, GradeEntry, SessionResponse } from "../lib/types";
 
 export function useMCQ(trackId: number) {
   const { isLoggedIn, authLoading, user } = useContext(AuthContext);
-  const router = useRouter();
   const [data, setData] = useState<Question[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionType, setSessionType] = useState<"onboarding" | "ai" | null>(null);
@@ -24,13 +22,6 @@ export function useMCQ(trackId: number) {
 
   useEffect(() => { dataRef.current = data; }, [data]);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
-
-  useEffect(() => {
-    if (!authLoading && !isLoggedIn) {
-      const name = trackId === 1 ? "python" : trackId === 2 ? "cpp" : "javascript";
-      router.push(`/learn/${name}`);
-    }
-  }, [authLoading, isLoggedIn, router, trackId]);
 
   const loadServerSession = useCallback(async (key: string) => {
     const response = await axios.post<SessionResponse>(
@@ -118,7 +109,29 @@ export function useMCQ(trackId: number) {
   }, [authLoading, isLoggedIn, trackId, user?.user_id, loadServerSession, applySession]);
 
   const startNewSession = useCallback(async () => {
-    if (!user?.user_id) return;
+    if (!isLoggedIn || !user?.user_id) {
+      const trackName = trackId === 1 ? "Python" : trackId === 2 ? "C++" : "JavaScript";
+      setLoading(true);
+      setError(null);
+      setCompleted(false);
+      setCurrentIndex(0);
+      currentIndexRef.current = 0;
+      setQuestionNumber(1);
+      setAnswer(-1);
+      setProgress(0);
+      setGrade([]);
+      try {
+        const module = await import("./sample.json");
+        const preview = module.default.filter((q) => q.topic === trackName) as Question[];
+        setData(preview);
+        dataRef.current = preview;
+      } catch {
+        setError("Could not load the question preview.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
     setLoading(true);
     setError(null);
     const scope = `${user.user_id}:${trackId}`;
@@ -135,7 +148,7 @@ export function useMCQ(trackId: number) {
     } finally {
       setLoading(false);
     }
-  }, [applySession, loadServerSession, trackId, user?.user_id]);
+  }, [applySession, isLoggedIn, loadServerSession, trackId, user?.user_id]);
 
   const submitAnswer = async () => {
     const currentData = dataRef.current;
@@ -156,7 +169,10 @@ export function useMCQ(trackId: number) {
         return;
       }
     } else {
-      setGrade((prev) => [...prev, { question_id: question.id, is_correct: false }]);
+      setGrade((prev) => [...prev, {
+        question_id: question.id,
+        is_correct: answer === question.correct_answer,
+      }]);
     }
     const nextIndex = idx + 1;
     setCurrentIndex(nextIndex);
